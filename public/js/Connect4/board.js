@@ -1,7 +1,11 @@
 class CanvasBoard {
-    constructor(maxtrix, game) {
-        this.stage = (typeof (createjs != "undefined")) && new createjs.Stage(boardGame)
+    constructor(maxtrix, game, twitch) {
+        if(createjs == null){
+            twitch.rig.log("Empty createjs");
+        }
+        this.stage = (typeof createjs != "undefined") && new createjs.Stage("boardGame");
         this.currentgame = game
+
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
             [
                 [0, 0, 0, 0, 0, 0, 0],
@@ -10,7 +14,7 @@ class CanvasBoard {
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0]
-            ];
+            ]
     }
 
     initBoard() {
@@ -25,15 +29,17 @@ class CanvasBoard {
     
     
         //Draw checkers
-        board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" });
+        /*board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" })
         _.forEach(board.matrixBoard, function (row, rowIndex) {
             _.forEach(row, function (column, columnIndex) {
-                var checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 100 + (50 * columnIndex), y: 50 + (50 * rowIndex) });
-                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23);
-                checkerSpace.cursor = "pointer";
-                checkerSpace.addEventListener("click", (board.currentgame.placeHumanMove).bind(board.currentgame) );
-            });
-        });
+                var checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 100 + (50 * columnIndex), y: 50 + (50 * rowIndex) })
+                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23)
+                checkerSpace.cursor = "pointer"
+                //checkerSpace.addEventListener("click", (board.currentgame.placeHumanMove).bind(board.currentgame) )
+            })
+        })*/
+
+        createjs.Ticker.addEventListerer("tick", board.stage)
     }
 
     resetBoard() {
@@ -90,6 +96,65 @@ class CanvasBoard {
             }
         };
         return !atLeastOneEmpty;
+    }
+
+    updateScore(humanInRow, ComputerInRow){
+        var points = 0;
+        switch (humanInRow) {
+            case 4:
+                points += Config.WINNING_SCORE;
+                break;
+        
+            case 3:
+                points += 5;
+                break;
+            
+            case 2:
+                points += 1;
+                break;
+
+            default:
+                break;
+        }
+
+        switch (ComputerInRow) {
+            case 4:
+                points -= Config.WINNING_SCORE;
+                break;
+        
+            case 3:
+                points -= 5;
+                break;
+            
+            case 2:
+                points -= 1;
+                break;
+
+            default:
+                break;
+        }
+
+        return points;
+    }
+
+    getScore(){
+        var board = this;
+        var score = 0;
+
+        //check rows
+        for(var row = 0; row < Config.ROWS_SIZE; row++){
+
+        }
+
+        //check columns
+        for(var column = 0; column < Config.COLUMNS_SIZE; column++){
+
+        }
+
+        //check diagonals
+        for (var column=0; column <= Config.COLUMNS_SIZE - 4; column++){
+
+        }
     }
 }
 

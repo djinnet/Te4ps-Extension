@@ -2,7 +2,14 @@
   "allowHttpBackend": false,
   "backendCommand": "",
   "backendFolderName": "",
-  "certificateExceptions": [],
+  "certificateExceptions": [
+    {
+      "isAllowed": true,
+      "isEphemeral": false,
+      "isOrigin": true,
+      "value": "wss://pubsub-edge.twitch.tv"
+    }
+  ],
   "extensionViews": [
     {
       "id": "1",
