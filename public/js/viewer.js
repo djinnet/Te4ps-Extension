@@ -2,11 +2,11 @@ var token = ""
 var tuid = ""
 
 // because who wants to type this every time?
-const twitch = window.Twitch ? window.Twitch.ext : null
+var twitch = window.Twitch ? window.Twitch.ext : null
 
 // create the request options for our Twitch API calls
 twitch.onContext(function(context) {
-    twitch.rig.log(context)
+    //twitch.rig.log(context)
 })
 
 twitch.configuration.onChanged(() => {

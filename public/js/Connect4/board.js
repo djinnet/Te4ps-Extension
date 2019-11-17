@@ -1,11 +1,7 @@
 class CanvasBoard {
-    constructor(maxtrix, game, twitch) {
-        if(createjs == null){
-            twitch.rig.log("Empty createjs");
-        }
+    constructor(maxtrix, game) {
+        //this.game = game;
         this.stage = (typeof createjs != "undefined") && new createjs.Stage("boardGame");
-        this.currentgame = game
-
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
             [
                 [0, 0, 0, 0, 0, 0, 0],
@@ -14,64 +10,78 @@ class CanvasBoard {
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0]
-            ]
+            ];
     }
 
-    initBoard() {
-        var board = this
-        board.stage.name = "stage"
-        board.stage.enableMouseOver(20)
+    initBoard(currentgame) {
+        let board = this;
+        board.stage.name = "stage";
+        board.stage.mouseEventsEnabled = true;
+        board.stage.enableMouseOver();
 
+        if(!currentgame){
+            twitch.rig.log("game is null");
+        }
+       
+        //twitch.rig.log(JSON.stringify(currentgame));
 
-        var boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
-        boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(60, 10, 380, 330)
-	    boardBackground.graphics.beginFill("#01579B").beginStroke("black").drawRect(30, 330, 440, 20)
+        let boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
+        boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(0, 20, 245, 240);
+        boardBackground.graphics.beginFill("#01579B").beginStroke("black").drawRect(0, 250, 245, 10);
     
     
         //Draw checkers
-        /*board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" })
-        _.forEach(board.matrixBoard, function (row, rowIndex) {
-            _.forEach(row, function (column, columnIndex) {
-                var checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 100 + (50 * columnIndex), y: 50 + (50 * rowIndex) })
-                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23)
-                checkerSpace.cursor = "pointer"
-                //checkerSpace.addEventListener("click", (board.currentgame.placeHumanMove).bind(board.currentgame) )
-            })
-        })*/
+        board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" })
 
-        createjs.Ticker.addEventListerer("tick", board.stage)
+        board.maxtrix.forEach(function (row, rowIndex) {
+            row.forEach(function (column, columnIndex) {
+                let checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 20 + (34 * columnIndex), y: 50 + (35 * rowIndex) })
+                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 13)
+                checkerSpace.cursor = "pointer"
+
+                //test purposes
+                /*checkerSpace.addEventListener("click", function(){
+                    twitch.rig.log("banana");
+                })*/
+
+                checkerSpace.addEventListener("click", (currentgame.placeHumanMove).bind(currentgame) )
+            })
+        })
+
+        createjs.Ticker.addEventListener("tick", board.stage)
+        board.stage.update();
     }
 
-    resetBoard() {
-        var board = this;
-        _.forEach(board.matrixBoard, function (row, rowIndex) {
-            _.forEach(row, function (column, columnIndex) {
-                var checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23);
-                board.matrixBoard[rowIndex][columnIndex] = 0 ;
+    reset() {
+        let board = this;
+        board.maxtrix.forEach(function (row, rowIndex) {
+            row.forEach(function (column, columnIndex) {
+                let checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
+                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 13);
+                board.maxtrix[rowIndex][columnIndex] = 0;
             });
         });
     }
 
     refresh() {
-        var board = this;
-        _.forEach(board.matrixBoard, function (row, rowIndex) {
-            _.forEach(row, function (column, columnIndex) {
-                var checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-                if(board.matrixBoard[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
-                    checkerSpace.graphics.beginFill("#f70202").beginStroke("grey").drawCircle(0, 0, 23);
-                }else if(board.matrixBoard[rowIndex][columnIndex] == Config.COMPUTER_AI){
-                    checkerSpace.graphics.beginFill("#ffc107").beginStroke("grey").drawCircle(0, 0, 23);
+        let board = this;
+        board.maxtrix.forEach(function (row, rowIndex) {
+            row.forEach(function (column, columnIndex) {
+                let checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
+                if(board.maxtrix[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
+                    checkerSpace.graphics.beginFill("#f70202").beginStroke("grey").drawCircle(0, 0, 13);
+                }else if(board.maxtrix[rowIndex][columnIndex] == Config.COMPUTER_AI){
+                    checkerSpace.graphics.beginFill("#ffc107").beginStroke("grey").drawCircle(0, 0, 13);
                 }	
             });
         });
     }
 
-    placeMove() {
-        var board = newBoard ? new CanvasBoard(this.matrixBoard) : this;
-        for(var i = Config.ROWS_SIZE-1; i >= 0 ; i--){
-            if(board.matrixBoard[i][columnMove] == 0){
-                board.matrixBoard[i][columnMove] = player;
+    placeMove(player, columnMove, newBoard) {
+        let board = newBoard ? new CanvasBoard(this.maxtrix) : this;
+        for(let i = Config.ROWS_SIZE-1; i >= 0 ; i--){
+            if(board.maxtrix[i][columnMove] == 0){
+                board.maxtrix[i][columnMove] = player;
                 return board;
             }
         }
@@ -87,10 +97,10 @@ class CanvasBoard {
     }
 
     isFull () {
-        var board = this;
-        for(var column=0; column<Config.COLUMNS_SIZE; column++){
+        let board = this;
+        for(let column=0; column<Config.COLUMNS_SIZE; column++){
             var atLeastOneEmpty = false;
-            if(board.matrixBoard[0][column] == 0){
+            if(board.maxtrix[0][column] == 0){
                 atLeastOneEmpty = true;
                 break;
             }
@@ -99,7 +109,7 @@ class CanvasBoard {
     }
 
     updateScore(humanInRow, ComputerInRow){
-        var points = 0;
+        let points = 0;
         switch (humanInRow) {
             case 4:
                 points += Config.WINNING_SCORE;
@@ -138,23 +148,107 @@ class CanvasBoard {
     }
 
     getScore(){
-        var board = this;
-        var score = 0;
+        let board = this;
+        let score = 0;
 
+        //todo: check this out: https://gist.github.com/Sascha-Gschwind/7cd6decff03a6e41a795d6f6104cb8af
+        //refactored this into single loop
         //check rows
-        for(var row = 0; row < Config.ROWS_SIZE; row++){
+        for(let row = 0; row < Config.ROWS_SIZE; row++){
+            for (let column = 0; column <= Config.COLUMNS_SIZE - 4; column++) {
+                let humanInRow = 0;
+                let ComputerInRow = 0;
 
+                for (let offset = column; offset < column + 4; offset++) {
+                    if(board.maxtrix[row][offset] == 1){
+                        humanInRow++;
+                        ComputerInRow = 0;
+                    }else if(board.maxtrix[row][offset] == 2){
+                        ComputerInRow++;
+                        humanInRow = 0;
+                    }
+                }
+                score += this.updateScore(humanInRow, ComputerInRow);
+
+                if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE){
+                    return score;
+                }
+            }
         }
 
         //check columns
-        for(var column = 0; column < Config.COLUMNS_SIZE; column++){
+        for(let column = 0; column < Config.COLUMNS_SIZE; column++){
+            for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
+                let humanInRow = 0;
+                let ComputerInRow = 0;
+                
+                for (let offset = row; offset < row + 4; offset++) {
+                    if(board.maxtrix[offset][column] == 1){
+                        humanInRow++;
+                        ComputerInRow = 0;
+                    }else if(board.maxtrix[offset][column] == 2){
+                        ComputerInRow++;
+                        humanInRow = 0;
+                    }
+                }
+                
+                score += this.updateScore(humanInRow, ComputerInRow);
 
+                if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE){
+                    return score;
+                }
+            }
         }
 
         //check diagonals
-        for (var column=0; column <= Config.COLUMNS_SIZE - 4; column++){
+        //one direction in diagonal
+        for (let column=0; column <= Config.COLUMNS_SIZE - 4; column++){
+            for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
+                let humanInRow = 0;
+                let ComputerInRow = 0;
+                
+                for (let offset = row; offset < row + 4; offset++) {
+                    if(board.maxtrix[offset][(offset - row) + column] == 1){
+                        humanInRow++;
+                        ComputerInRow = 0;
+                    }else if(board.maxtrix[offset][(offset - row) + column] == 2){
+                        ComputerInRow++;
+                        humanInRow = 0;
+                    }
+                }
+                score += this.updateScore(humanInRow, ComputerInRow);
 
+                if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE){
+                    return score;
+                }
+            }
         }
+
+        //another direction in diagonal
+        for (let column = Config.COLUMNS_SIZE - 1; column >= Config.COLUMNS_SIZE - 4; column--){
+            for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
+                let humanInRow = 0;
+                let ComputerInRow = 0;
+                
+                for (let offset = row; offset < row + 4; offset++) {
+                    if(board.maxtrix[offset][column - (offset - row)] == 1){
+                        humanInRow++;
+                        ComputerInRow = 0;
+                    }else if(board.maxtrix[offset][column - (offset - row)] == 2){
+                        ComputerInRow++;
+                        humanInRow = 0;
+                    }
+                }
+
+                score += this.updateScore(humanInRow, ComputerInRow);
+
+                if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE){
+                    return score;
+                }
+            }
+        }
+
+        return score;
     }
 }
 
