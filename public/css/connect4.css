@@ -8,58 +8,74 @@ header {
     margin:15px 0px 40px 0px;
 }
 
+#CanvasBoard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 header p{
     font-size: 18px;
 }
 
-#alertsContainer{
-    margin-left:50px; 
-    width:400px; 
-    margin-bottom: -10px;
+#alertsContainer.outer-box{
+    width: 300px;
+    height: 194px;
+    display: block;
+    position: relative;
 }
+
+#outer-box #waitingAlert {
+    background: #FD8698;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 0;
+    transition: opacity .5s;
+  }
+
+  #outer-box #winningAlert {
+    background: #0277BD;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 0;
+    transition: opacity .5s;
+  }
+
+  #outer-box:hover #winningAlert {
+    opacity: 1;
+  }
+
+  #outer-box:hover #waitingAlert {
+    opacity: .9;
+    transition: opacity .5s;
+  }
 
 #winningAlert{
     text-align: center;
     margin-bottom: 5px; 
     display: none;
+    position: absolute;
 }
 
 #waitingAlert{
     margin-bottom: 5px; 
     display: none;
-}
-
-#scoreAlert{
-    margin-bottom: 5px;
-    font-size: 15px; 
-}
-
-#settings-box{
-    padding:60px 0px 0px 50px;
+    position: absolute;
 }
 
 
 /**** MOBILE ****/
 
-@media only screen and (max-width: 768px) {
-    #settings-box{
-        padding: 0px 0px 30px 50px;
-    }
-    
-    #alertsContainer {
-        width: 90%;
-    }
-    
-    #alertsContainer{
-        width:100%; 
-        margin-bottom: 0px; 
-    }
-    
-    #scoreAlert{
-        padding: 10px 5px;
-        font-size: 13px;
-    }
-    
+@media only screen and (max-width: 768px) {   
     #waitingAlert {
         margin-bottom: 0px;
         font-size: 10px !important;

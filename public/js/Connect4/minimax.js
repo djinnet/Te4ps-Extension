@@ -29,7 +29,8 @@ class Minimax{
         let nodes = [];
 
         let player = maximizingPlayer ? Config.HUMAN_PLAYER : Config.AI
-        for(let column = 0; column < Config.COLUMS_SIZE; column++){
+
+        for(let column = 0; column < Config.COLUMNS_SIZE; column++){
             let nextPossibleBoard = board.placeMove(player, column, true);
             if(nextPossibleBoard) nodes[column] = nextPossibleBoard
         }
@@ -68,7 +69,7 @@ class Minimax{
                 "columnMove" : null,
                 "score" : 99999
             }
-
+            
             for( let i = 0; i <= nodes.length; i++){
                 if(!nodes[i]) continue;
                 let nextmove = this.alphabeta(nodes[i], depth - 1, a, b, true)

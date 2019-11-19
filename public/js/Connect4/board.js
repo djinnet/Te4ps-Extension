@@ -1,6 +1,6 @@
 class CanvasBoard {
     constructor(maxtrix, game) {
-        //this.game = game;
+        this.currentgame = game;
         this.stage = (typeof createjs != "undefined") && new createjs.Stage("boardGame");
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
             [
@@ -22,7 +22,7 @@ class CanvasBoard {
         if(!currentgame){
             twitch.rig.log("game is null");
         }
-       
+        this.currentgame = currentgame;
         //twitch.rig.log(JSON.stringify(currentgame));
 
         let boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
@@ -48,6 +48,12 @@ class CanvasBoard {
             })
         })
 
+        board.stage.on('click', function(e) {
+            if(board.isClickDisabled){
+                e.stopPropagation();
+            };
+        }, null, false, {}, true);
+
         createjs.Ticker.addEventListener("tick", board.stage)
         board.stage.update();
     }
@@ -70,7 +76,7 @@ class CanvasBoard {
                 let checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
                 if(board.maxtrix[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
                     checkerSpace.graphics.beginFill("#f70202").beginStroke("grey").drawCircle(0, 0, 13);
-                }else if(board.maxtrix[rowIndex][columnIndex] == Config.COMPUTER_AI){
+                }else if(board.maxtrix[rowIndex][columnIndex] == Config.AI){
                     checkerSpace.graphics.beginFill("#ffc107").beginStroke("grey").drawCircle(0, 0, 13);
                 }	
             });
@@ -150,14 +156,15 @@ class CanvasBoard {
     getScore(){
         let board = this;
         let score = 0;
-
+        //console.log(JSON.stringify(board.maxtrix))
+        //twitch.rig.log(JSON.stringify(board.maxtrix))
         //todo: check this out: https://gist.github.com/Sascha-Gschwind/7cd6decff03a6e41a795d6f6104cb8af
         //refactored this into single loop
         //check rows
         for(let row = 0; row < Config.ROWS_SIZE; row++){
             for (let column = 0; column <= Config.COLUMNS_SIZE - 4; column++) {
-                let humanInRow = 0;
-                let ComputerInRow = 0;
+                var humanInRow = 0;
+                var ComputerInRow = 0;
 
                 for (let offset = column; offset < column + 4; offset++) {
                     if(board.maxtrix[row][offset] == 1){
@@ -179,8 +186,8 @@ class CanvasBoard {
         //check columns
         for(let column = 0; column < Config.COLUMNS_SIZE; column++){
             for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
-                let humanInRow = 0;
-                let ComputerInRow = 0;
+                var humanInRow = 0;
+                var ComputerInRow = 0;
                 
                 for (let offset = row; offset < row + 4; offset++) {
                     if(board.maxtrix[offset][column] == 1){
@@ -204,8 +211,8 @@ class CanvasBoard {
         //one direction in diagonal
         for (let column=0; column <= Config.COLUMNS_SIZE - 4; column++){
             for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
-                let humanInRow = 0;
-                let ComputerInRow = 0;
+                var humanInRow = 0;
+                var ComputerInRow = 0;
                 
                 for (let offset = row; offset < row + 4; offset++) {
                     if(board.maxtrix[offset][(offset - row) + column] == 1){
@@ -227,8 +234,8 @@ class CanvasBoard {
         //another direction in diagonal
         for (let column = Config.COLUMNS_SIZE - 1; column >= Config.COLUMNS_SIZE - 4; column--){
             for (let row = 0; row <= Config.ROWS_SIZE - 4; row++) {
-                let humanInRow = 0;
-                let ComputerInRow = 0;
+                var humanInRow = 0;
+                var ComputerInRow = 0;
                 
                 for (let offset = row; offset < row + 4; offset++) {
                     if(board.maxtrix[offset][column - (offset - row)] == 1){

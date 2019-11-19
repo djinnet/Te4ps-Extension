@@ -57,12 +57,14 @@ class Game {
         game.turn = game.turn == Config.HUMAN_PLAYER ? Config.AI : Config.HUMAN_PLAYER;
 
         if(game.turn == Config.AI){
+            twitch.rig.log("This is AI turn");
             game.computerIsThinking = true;
             game.board.disableClick();
             //show the thinking proces
             $("#waitingAlert").show();
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
+            twitch.rig.log("This is human turn");
             game.computerIsThinking = false;
             game.board.enableClick();
             $("#waitingAlert").hide();
