@@ -42,16 +42,11 @@ header p{
     background: #0277BD;
     height: 100%;
     width: 100%;
-    opacity: 0;
+    opacity: 1;
     top: 0;
     left: 0;
     position: absolute;
     padding: 0;
-    transition: opacity .5s;
-  }
-
-  #outer-box:hover #winningAlert {
-    opacity: 1;
   }
 
   #outer-box:hover #waitingAlert {

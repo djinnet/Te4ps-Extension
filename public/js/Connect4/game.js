@@ -56,6 +56,7 @@ class Game {
 
         game.turn = game.turn == Config.HUMAN_PLAYER ? Config.AI : Config.HUMAN_PLAYER;
 
+        
         if(game.turn == Config.AI){
             twitch.rig.log("This is AI turn");
             game.computerIsThinking = true;
@@ -82,6 +83,13 @@ class Game {
 
             document.getElementById("winningAlert").innerHTML = winnertext;
 
+            var resetbutton = $('<button id="restartGameAlert" type="button" class="btn btn-outline-primary">Restart</button>')
+            $("#winningAlert").append(resetbutton)
+
+            $(resetbutton).on('click', function(e) {
+                game.resetGame();
+             });
+
             game.board.disableClick();
         }else{
             if(game.turn == Config.AI){
@@ -100,9 +108,11 @@ function Init() {
     //twitch.rig.log(game);
     game.board.initBoard(game);
 
-    //$("#restartGame").on('click', function(e) {
-    //    game.resetGame();
-    //});
+    $("#restartGame").on('click', function(e) {
+       game.resetGame();
+    });
+
+    
 }
 
 window.onload = function() {
