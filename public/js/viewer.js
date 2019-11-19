@@ -6,7 +6,7 @@ var twitch = window.Twitch ? window.Twitch.ext : null
 
 // create the request options for our Twitch API calls
 twitch.onContext(function(context) {
-    //twitch.rig.log(context)
+    twitch.rig.log(context)
 })
 
 twitch.configuration.onChanged(() => {
@@ -19,8 +19,8 @@ twitch.onAuthorized(function(auth) {
     tuid = auth.userId
 })
 
-function updateGrid(hex) {
-    twitch.rig.log('Updating block color')
+function updateMode(hex) {
+    twitch.rig.log('Updating mode')
 }
 
 function logError(_, error, status) {
@@ -34,10 +34,6 @@ function logSuccess(status) {
 }
 
 $(function() {
-    $('#resetButton').click(function() {
-        twitch.rig.log('Requesting reset')
-    })
-
     // listen for incoming broadcast message from our EBS
     twitch.listen('broadcast', function (target, contentType, color) {
         twitch.rig.log('Received broadcast')

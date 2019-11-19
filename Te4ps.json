@@ -56,6 +56,29 @@
         "width": 1280,
         "height": 720
       }
+    },
+    {
+      "id": "3",
+      "label": "Config page",
+      "channelId": "45983494",
+      "configurationAnchor": "component",
+      "displayChannelName": "djinnet",
+      "type": "config",
+      "features": {
+        "isBitsEnabled": false,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "linked": true,
+      "linkedUserId": "265737932",
+      "mode": "config",
+      "isPopout": false,
+      "role": "Broadcaster",
+      "orientation": "Portrait",
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      }
     }
   ],
   "manifest": {

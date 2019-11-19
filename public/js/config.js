@@ -1,9 +1,9 @@
 let token, userId;
 
-const twitch = window.Twitch.ext;
+var twitch = window.Twitch ? window.Twitch.ext : null
 
 twitch.onContext((context) => {
-  //twitch.rig.log(context);
+  twitch.rig.log(context);
 });
 
 twitch.onAuthorized((auth) => {
