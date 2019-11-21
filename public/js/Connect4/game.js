@@ -101,20 +101,3 @@ class Game {
     }
 }
 
-function Init() {
-    let game = new Game();
-    game.worker = new Worker("js/Connect4/minimax.js");
-    
-    //twitch.rig.log(game);
-    game.board.initBoard(game);
-
-    $("#restartGame").on('click', function(e) {
-       game.resetGame();
-    });
-
-    
-}
-
-window.onload = function() {
-    Init();
-};

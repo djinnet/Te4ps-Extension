@@ -15,6 +15,7 @@
     <script src="lib/cyclejs/cycle.js" type="text/javascript"></script>
 
     <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+    <script type="module" src="js/bundle.js"></script>
   </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
     <div id="app" class="full-height">
@@ -27,14 +28,12 @@
       </div>
       
       <div id="CanvasBoard">
-          <button id="restartGame" type="button" class="btn btn-primary">Restart</button>
-          <canvas id="boardGame" width="300" height="300"></canvas>
       </div>
     </div>
 
     <script src="js/Connect4/board.js" type="text/javascript"></script>
     <script src="js/Connect4/game.js" type="text/javascript"></script>
-    <script src="js/viewer.js" type="text/javascript"></script>
+    <script src="js/viewer.js" type="module"></script>
     <script src="js/Connect4/config.js" type="text/javascript"></script>
     <script src="js/Connect4/config.js" type="text/javascript"></script>
     

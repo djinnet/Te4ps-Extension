@@ -9,14 +9,13 @@
     <!-- If you use any external libraries, such as jQuery, you must include
       them as part of your extension.  Twitch does not allow extensions to link
       to external libraries. -->
-    <script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="lib/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script src="js/config.js" type="text/javascript"></script>
     <h2>Configure Mode (REQUIRE!)</h2>
-    <select>
-        <option value="0">Solo mode</option>
+    <select id="selectMode" onchange="ChangeElementValue(this);">
+        <option value="0" selected="selected">Solo mode</option>
         <option value="1">Chat mode (chat vs AI)</option>
-        <option value="2">Streamer mode (chat vs streamer)</option>
-        <option value="3">PVP mode (chat vs chat)</option>
+        <option value="2">PVP mode (chat vs chat)</option>
       </select> 
 </body>
 </html>
