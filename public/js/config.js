@@ -30,7 +30,7 @@ function saveMode (selectedIndex) {
   // set configuration service with broadcaster and version number and json.
   twitch.configuration.set('broadcaster', '0.0.1', json)
 
-  // twitch.rig.log('set broadcaster team: ' + json);
+  twitch.rig.log('set broadcaster team: ' + json);
 
   // broadcast to the channel with the json data
   sendTeamBroadcast(channelId, json)
@@ -64,7 +64,7 @@ function BroadcastTemtemTeam (method, channelId, headers, body) {
     headers: headers,
     url: `https://api.twitch.tv/extensions/message/${channelId}`,
     success: function(data, staus, xhr) {
-      //twitch.rig.log("successfully call")
+      twitch.rig.log("successfully call")
     },
     error: function (xhr, status, err) {
       twitch.rig.log("Error sending message to channel " + channelId + " : " + err);
@@ -74,8 +74,7 @@ function BroadcastTemtemTeam (method, channelId, headers, body) {
 }
 
 function setElementValue(id, valueToSelect) {    
-  let element = document.getElementById(id);
-  element.value = valueToSelect;
+  document.getElementById(id).value = valueToSelect;
 }
 
 twitch.onAuthorized((auth) => {
