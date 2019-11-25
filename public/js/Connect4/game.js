@@ -1,8 +1,9 @@
 class Game {
-    constructor() {
+    constructor(ids) {
+        this.ids = ids;
         this.turn = Config.HUMAN_PLAYER;
         this.computerIsThinking = false;
-        this.board = new CanvasBoard(null, this, twitch);
+        this.board = new CanvasBoard(null, this, theme);
     }
 
     placeHumanMove(evt) {

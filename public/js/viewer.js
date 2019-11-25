@@ -1,5 +1,5 @@
-var token = "", tuid ="", channelName =""
-var theme = ""
+let token = "", tuid ="", channelName =""
+let theme = ""
 
 var twitch = window.Twitch ? window.Twitch.ext : null
 
@@ -14,7 +14,7 @@ twitch.onAuthorized((auth) => {
 })
 
 twitch.configuration.onChanged(() => {
-    Init()
+    //Init()
     /*if(twitch.configuration.broadcaster){
         let broadcaster = twitch.configuration.broadcaster
     
@@ -68,34 +68,64 @@ function SwitchInit(value) {
     }
 }
 
-function getTheme(theme) {
-    return theme ==! "light" ? "CanvasBoardDark" : "CanvasBoard";
+
+function getAppTheme(theme, id) {
+    return theme ==! "light" ? `${id}Dark` : `${id}`;
+}
+
+/*
+*
+*/
+function getThemeBoolean(theme) {
+    return theme ==!"light" ? true : false;
 }
 
 function Init() {
-    let CanvasBoard = getTheme(theme)
-    twitch.rig.log(CanvasBoard)
-    $("#app").append(`<div id='${CanvasBoard}'></div>`)
-    
-    $(`#${CanvasBoard}`).empty();
+    let Ids = {
+        theme:theme,
+        app:getAppTheme(theme, "app"),
+        CanvasBoard:getAppTheme(theme, "CanvasBoard"),
+        boardGame:getAppTheme(theme, "boardGame"),
+        button:getAppTheme(theme, "restartGame"),
+        boardGameCountTurn:getAppTheme(theme, "boardGameCountTurn"),
+        canvasTitle:getAppTheme(theme, "boardGameTitle"),
+        canvasturn:getAppTheme(theme, "turn"),
+        alert:getAppTheme(theme, "Alert"),
+        logo:getAppTheme(theme, "boardGameLogo"),
 
-    let button = $('<button id="restartGame" type="button" class="btn btn-primary">Restart</button>')
-    
-    let canvas = $(`<canvas id="boardGame" width="300" height="300"></canvas>`)
-    let canvasTitle = $('<h1 id="boardGameTitle">Connect 4</h1>')
-    let canvasturn = $('<div id="turn"></div>')
-    let canvasalert = $('<div id="Alert"></div>')
-    
-    let canvasLogo = $('<img id="boardGameLogo"/>')
+    }
+
+    console.log(Ids.CanvasBoard)
+    console.log(Ids.app)
+
+    if(getThemeBoolean(theme)){
+        $("#app").prop('id', `${Ids.app}`)
+        $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        $(`#${Ids.CanvasBoard}`).empty();
+    }else{
+        $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        $(`#${Ids.CanvasBoard}`).empty();       
+    }
+
+    let button = $(`<button id="${Ids.button}" type="button" class="btn btn-primary">Restart</button>`)
+    let canvasCountTurn = $(`<p id="${Ids.boardGameCountTurn}"></p>`)
+    let canvas = $(`<canvas id="${Ids.boardGame}" width="300" height="300"></canvas>`)
+    let canvasTitle = $(`<h1 id="${Ids.canvasTitle}">Connect 4</h1>`)
+    let canvasturn = $(`<div id="${Ids.canvasturn}"></div>`)
+    let canvasalert = $(`<div id="${Ids.alert}"></div>`)
+    let canvasLogo = $(`<img id="${Ids.logo}"/>`)
+
     $(`#${CanvasBoard}`).append(canvasTitle)
+    $(`#${CanvasBoard}`).append(canvasCountTurn)
     $(`#${CanvasBoard}`).append(canvasturn)
     $(`#${CanvasBoard}`).append(canvasalert)
     $(`#${CanvasBoard}`).append(canvas)
     $(`#${CanvasBoard}`).append(button)
     $(`#${CanvasBoard}`).append(canvasLogo)
+
     let outer = $('<div id="outer-box"></div>')
-    outer.append('<div id="winningAlert"></div>')
-    outer.append('<div id="waitingAlert" role="alert">AI is thinking...</div>')
+    outer.append('<div id="winningAlert"></div>') 
+    outer.append('<div id="waitingAlert" role="alert">&#9881;</div>')
     $("#Alert").append(outer)
 
     let game = new Game();
@@ -113,6 +143,7 @@ function parseJson(input){
 
 $(function() {
     // listen for incoming broadcast message from our EBS
+    /*
     twitch.listen('broadcast', function (target, contentType, message) {
         this.twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${message}`)
         let value = parseJson(message)
@@ -120,4 +151,6 @@ $(function() {
         //window.location.reload(false)
         Init()
     })
+    */
+   Init()
 })

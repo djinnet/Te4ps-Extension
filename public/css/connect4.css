@@ -35,11 +35,14 @@ header p{
 }
 
 #CanvasBoardDark{
-    background-color: #0E0E10;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+#appDark{
+    background-color: #0E0E10;
 }
 
 #outer-box #winningAlert {
