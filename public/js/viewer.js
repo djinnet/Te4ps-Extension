@@ -56,8 +56,7 @@ function AuthForMultiPlayer() {
 }
 
 function SwitchInit(value) {
-    let result = parseInt(value, 10)
-    switch (result) {
+    switch (parseInt(value, 10)) {
         case 0:
             Init();
             break;
@@ -70,35 +69,48 @@ function SwitchInit(value) {
 
 
 function getAppTheme(theme, id) {
-    return theme ==! "light" ? `${id}Dark` : `${id}`;
+    return theme === "dark" ? `${id}Dark` : `${id}`;
 }
 
-/*
-*
-*/
-function getThemeBoolean(theme) {
-    return theme ==!"light" ? true : false;
+function IsDarkMode(theme) {
+    return theme === "dark" ? true : false;
 }
 
 function Init() {
+    let appId = getAppTheme(theme, "app")
+    let CanvasBoardId = getAppTheme(theme, "CanvasBoard")
+    let boardGameId = getAppTheme(theme, "boardGame")
+    let buttonId = getAppTheme(theme, "restartGame")
+    let boardGameCountTurnId = getAppTheme(theme, "boardGameCountTurn")
+    let canvasTitleId = getAppTheme(theme, "boardGameTitle")
+    let canvasturnId = getAppTheme(theme, "turn")
+    let alertId = getAppTheme(theme, "Alert")
+    let logoId = getAppTheme(theme, "boardGameLogo")
+    let winAlertId = getAppTheme(theme, "winningAlert")
+    let waitAlertId = getAppTheme(theme, "waitingAlert")
+
     let Ids = {
         theme:theme,
-        app:getAppTheme(theme, "app"),
-        CanvasBoard:getAppTheme(theme, "CanvasBoard"),
-        boardGame:getAppTheme(theme, "boardGame"),
-        button:getAppTheme(theme, "restartGame"),
-        boardGameCountTurn:getAppTheme(theme, "boardGameCountTurn"),
-        canvasTitle:getAppTheme(theme, "boardGameTitle"),
-        canvasturn:getAppTheme(theme, "turn"),
-        alert:getAppTheme(theme, "Alert"),
-        logo:getAppTheme(theme, "boardGameLogo"),
-
+        app:appId,
+        CanvasBoard:CanvasBoardId,
+        boardGame:boardGameId,
+        button:buttonId,
+        boardGameCountTurn:boardGameCountTurnId,
+        canvasTitle:canvasTitleId,
+        canvasturn:canvasturnId,
+        alert:alertId,
+        logo:logoId,
+        winAlert:winAlertId,
+        waitAlert:waitAlertId
     }
 
-    console.log(Ids.CanvasBoard)
-    console.log(Ids.app)
+    let isDarkmode = IsDarkMode(theme)
+    twitch.rig.log(Ids.CanvasBoard)
+    twitch.rig.log(Ids.app)
+    twitch.rig.log(isDarkmode)
+    twitch.rig.log(Ids.canvasTitle)
 
-    if(getThemeBoolean(theme)){
+    if(isDarkmode){
         $("#app").prop('id', `${Ids.app}`)
         $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
         $(`#${Ids.CanvasBoard}`).empty();
@@ -106,35 +118,31 @@ function Init() {
         $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
         $(`#${Ids.CanvasBoard}`).empty();       
     }
+    
+    $(`#${Ids.CanvasBoard}`).append(`<h1 id=""${Ids.canvasTitle}"">Connect 4</h1>`)
+    $(`#${Ids.CanvasBoard}`).append(`<p id="${Ids.boardGameCountTurn}"></p>`)
+    $(`#${Ids.CanvasBoard}`).append(`<div id="${Ids.canvasturn}"></div>`)
+    $(`#${Ids.CanvasBoard}`).append(`<div id="${Ids.alert}"></div>`)
+    $(`#${Ids.CanvasBoard}`).append(`<canvas id="${Ids.boardGame}" width="300" height="300"></canvas>`)
+    $(`#${Ids.CanvasBoard}`).append(`<button id="${Ids.button}" type="button" class="btn btn-primary">Restart</button>`)
+    $(`#${Ids.CanvasBoard}`).append(`<img id="${Ids.logo}"/>`)
 
-    let button = $(`<button id="${Ids.button}" type="button" class="btn btn-primary">Restart</button>`)
-    let canvasCountTurn = $(`<p id="${Ids.boardGameCountTurn}"></p>`)
-    let canvas = $(`<canvas id="${Ids.boardGame}" width="300" height="300"></canvas>`)
-    let canvasTitle = $(`<h1 id="${Ids.canvasTitle}">Connect 4</h1>`)
-    let canvasturn = $(`<div id="${Ids.canvasturn}"></div>`)
-    let canvasalert = $(`<div id="${Ids.alert}"></div>`)
-    let canvasLogo = $(`<img id="${Ids.logo}"/>`)
+    
+    let outer = $(`<div id="outer-box"></div>`)
+    outer.append(`<div id="${Ids.winAlert}"></div>`) 
+    outer.append(`<div id="${Ids.waitAlert}" role="alert">&#9881;</div>`)
+    $(`#${Ids.alert}`).append(outer)
 
-    $(`#${CanvasBoard}`).append(canvasTitle)
-    $(`#${CanvasBoard}`).append(canvasCountTurn)
-    $(`#${CanvasBoard}`).append(canvasturn)
-    $(`#${CanvasBoard}`).append(canvasalert)
-    $(`#${CanvasBoard}`).append(canvas)
-    $(`#${CanvasBoard}`).append(button)
-    $(`#${CanvasBoard}`).append(canvasLogo)
-
-    let outer = $('<div id="outer-box"></div>')
-    outer.append('<div id="winningAlert"></div>') 
-    outer.append('<div id="waitingAlert" role="alert">&#9881;</div>')
-    $("#Alert").append(outer)
-
-    let game = new Game();
-    $(button).on('click', function(e) {
+    
+    let game = new Game(Ids);
+    $(`#${Ids.button}`).on('click', function(e) {
        game.resetGame();
     });
 
     game.worker = new Worker("js/Connect4/minimax.js");
     game.board.initBoard(game);
+
+    
 }
 
 function parseJson(input){

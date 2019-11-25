@@ -1,7 +1,8 @@
 class CanvasBoard {
-    constructor(maxtrix, game) {
+    constructor(maxtrix, game, ids) {
+        this.ids = ids;
         this.currentgame = game;
-        this.stage = (typeof createjs != "undefined") && new createjs.Stage("boardGame");
+        this.stage = (typeof createjs != "undefined") && new createjs.Stage(ids.boardGame);
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
             [
                 [0, 0, 0, 0, 0, 0, 0],
@@ -22,8 +23,8 @@ class CanvasBoard {
         if(!currentgame){
             twitch.rig.log("game is null");
         }
+
         this.currentgame = currentgame;
-        //twitch.rig.log(JSON.stringify(currentgame));
 
         let boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
         boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(0, 20, 245, 240);

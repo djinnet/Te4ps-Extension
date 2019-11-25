@@ -3,6 +3,10 @@ body {
     overflow: hidden;
 }
 
+#app {
+    overflow: hidden;
+}
+
 header {
     text-align: center; 
     margin:15px 0px 40px 0px;

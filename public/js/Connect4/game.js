@@ -3,12 +3,12 @@ class Game {
         this.ids = ids;
         this.turn = Config.HUMAN_PLAYER;
         this.computerIsThinking = false;
-        this.board = new CanvasBoard(null, this, theme);
+        this.board = new CanvasBoard(null, this, ids);
     }
 
     placeHumanMove(evt) {
         let game = this
-        //twitch.rig.log(evt.currentTarget.name)
+
         let checkerSpace = evt.currentTarget.name
         let columnIndex = checkerSpace[checkerSpace.length - 1]
 
@@ -24,7 +24,7 @@ class Game {
         let deferred = jQuery.Deferred();
         let depth = 5;
 
-        let board = new CanvasBoard(game.board.maxtrix, game, twitch)
+        let board = new CanvasBoard(game.board.maxtrix, game, this.ids)
         
         game.worker.addEventListener('message', function handler(e) {
             let bestmove = e.data;
@@ -46,13 +46,13 @@ class Game {
     resetGame() {
         this.board.reset();
         this.turn = Config.HUMAN_PLAYER;
-        $("#winningAlert").hide();
-        $("#turn").empty()
-        $("#turn").hide()
-        $("#boardGame").show()
-        $("#boardGameTitle").show()
-        $("#boardGameLogo").show()
-        $("#restartGame").show()
+        $(`#${this.ids.alert}`).hide();
+        $(`#${this.ids.canvasturn}`).empty()
+        $(`#${this.ids.canvasturn}`).hide()
+        $(`#${this.ids.boardGame}`).show()
+        $(`#${this.ids.canvasTitle}`).show()
+        $(`#${this.ids.logo}`).show()
+        $(`#${this.ids.buttonId}`).show()
         this.board.enableClick();
     }
     
@@ -63,22 +63,22 @@ class Game {
 
         game.turn = game.turn == Config.HUMAN_PLAYER ? Config.AI : Config.HUMAN_PLAYER;
 
-        $("#turn").show()
+        $(`#${this.ids.canvasturn}`).show()
         if(game.turn == Config.AI){
             twitch.rig.log("This is AI turn");
-            $("#turn").empty()
+            $(`#${this.ids.canvasturn}`).empty()
             game.computerIsThinking = true;
             game.board.disableClick();
             //show the thinking proces
-            $("#waitingAlert").css('display', 'flex');
+            $(`#${this.ids.waitAlert}`).css('display', 'flex');
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
             twitch.rig.log("This is human turn");
-            $("#turn").empty()
-            $("#turn").append("This is human turn")
+            $(`#${this.ids.canvasturn}`).empty()
+            $(`#${this.ids.canvasturn}`).append("This is human turn")
             game.computerIsThinking = false;
             game.board.enableClick();
-            $("#waitingAlert").hide();
+            $(`#${this.ids.waitAlert}`).hide();
         }
 
         let score = game.board.getScore();
@@ -86,20 +86,20 @@ class Game {
         let isDrawn = game.board.isFull();
 
         if(isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
-            $("#winningAlert").css('display', 'flex');
-            $("#waitingAlert").hide();
-            $("#boardGame").hide();
-            $("#restartGame").hide()
-            $("#boardGameTitle").hide()
-            $("#boardGameLogo").hide()
+            $(`#${this.ids.winAlert}`).css('display', 'flex');
+            $(`#${this.ids.waitAlert}`).hide();
+            $(`#${this.ids.boardGame}`).hide();
+            $(`#${this.ids.buttonId}`).hide()
+            $(`#${this.ids.canvasTitle}`).hide()
+            $(`#${this.ids.logo}`).hide()
             
-            $("#turn").hide();
+            $(`#${this.ids.canvasturn}`).hide();
             let winnertext = isDrawn ? "<p>Draw! Try again!</p>" : (score > 0 ? "<p>you win!</p>" : "<p>AI win!</p>");
 
-            document.getElementById("winningAlert").innerHTML = winnertext;
+            document.getElementById(this.ids.winAlert).innerHTML = winnertext;
 
             let resetbutton = $('<button id="restartGameAlert" type="button" class="btn btn-primary">Restart</button>')
-            $("#winningAlert").append(resetbutton)
+            $(`#${this.ids.winAlert}`).append(resetbutton)
 
             $(resetbutton).on('click', function(e) {
                 game.resetGame();
