@@ -1,21 +1,21 @@
-var token, tuid, channelName
+var token = "", tuid ="", channelName =""
+var theme = ""
 
-// because who wants to type this every time?
 var twitch = window.Twitch ? window.Twitch.ext : null
 
-twitch.onContext(function(context) {
-    //twitch.rig.log(context)
+twitch.onContext((context) => {
+    theme = context.theme
+    twitch.rig.log(context)
 })
 
 twitch.onAuthorized((auth) => {
     token = auth.token
-    
     tuid = auth.userId
 })
 
 twitch.configuration.onChanged(() => {
-    twitch.rig.log(token)
-    if(twitch.configuration.broadcaster){
+    Init()
+    /*if(twitch.configuration.broadcaster){
         let broadcaster = twitch.configuration.broadcaster
     
         let content = broadcaster ? broadcaster.content : []
@@ -26,14 +26,11 @@ twitch.configuration.onChanged(() => {
             content = broadcaster.content
         }
         
-        if(token ==! null || token ==! undefined){
-            let value = JSON.parse(broadcaster.content)
-            SwitchInit(value.mode)
-        }
-    }
+        let value = JSON.parse(broadcaster.content)
+        //SwitchInit(value.mode)
+        
+    }*/
 })
-
-
 
 function AuthForMultiPlayer() {
     let parts = token.split(".")
@@ -59,35 +56,53 @@ function AuthForMultiPlayer() {
 }
 
 function SwitchInit(value) {
-    twitch.rig.log("token: " + token)
     let result = parseInt(value, 10)
     switch (result) {
         case 0:
             Init();
             break;
-        case 1:
-        case 2:
-            //twitch.rig.log("token value: " + test)
-            //AuthForMultiPlayer()
-            break;
         default:
             twitch.rig.log("We don't know this value: " + value)
+            Init();
             break;
     }
 }
 
-function Init() {
-    $('#CanvasBoard').empty();
-    let button = $('<button id="restartGame" type="button" class="btn btn-primary">Restart</button>')
-    let canvas = $('<canvas id="boardGame" width="300" height="300"></canvas>')
-    $('#CanvasBoard').append(canvas)
-    $('#CanvasBoard').append(button)
+function getTheme(theme) {
+    return theme ==! "light" ? "CanvasBoardDark" : "CanvasBoard";
+}
 
+function Init() {
+    let CanvasBoard = getTheme(theme)
+    twitch.rig.log(CanvasBoard)
+    $("#app").append(`<div id='${CanvasBoard}'></div>`)
+    
+    $(`#${CanvasBoard}`).empty();
+
+    let button = $('<button id="restartGame" type="button" class="btn btn-primary">Restart</button>')
+    
+    let canvas = $(`<canvas id="boardGame" width="300" height="300"></canvas>`)
+    let canvasTitle = $('<h1 id="boardGameTitle">Connect 4</h1>')
+    let canvasturn = $('<div id="turn"></div>')
+    let canvasalert = $('<div id="Alert"></div>')
+    
+    let canvasLogo = $('<img id="boardGameLogo"/>')
+    $(`#${CanvasBoard}`).append(canvasTitle)
+    $(`#${CanvasBoard}`).append(canvasturn)
+    $(`#${CanvasBoard}`).append(canvasalert)
+    $(`#${CanvasBoard}`).append(canvas)
+    $(`#${CanvasBoard}`).append(button)
+    $(`#${CanvasBoard}`).append(canvasLogo)
+    let outer = $('<div id="outer-box"></div>')
+    outer.append('<div id="winningAlert"></div>')
+    outer.append('<div id="waitingAlert" role="alert">AI is thinking...</div>')
+    $("#Alert").append(outer)
+
+    let game = new Game();
     $(button).on('click', function(e) {
        game.resetGame();
     });
 
-    let game = new Game();
     game.worker = new Worker("js/Connect4/minimax.js");
     game.board.initBoard(game);
 }
@@ -103,6 +118,6 @@ $(function() {
         let value = parseJson(message)
         
         //window.location.reload(false)
-        SwitchInit(value.mode)
+        Init()
     })
 })

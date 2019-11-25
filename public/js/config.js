@@ -52,7 +52,7 @@ function sendTeamBroadcast (channelId, array) {
   })
 
   // Send the broadcast request to the Twitch API.
-  // twitch.rig.log('Broadcasting temtem team ' + array + 'for ' + clientId ); //Debug purposes
+  // twitch.rig.log('Broadcasting temtem team ' + token + 'for ' + clientId ); //Debug purposes
   $.ajax(BroadcastTemtemTeam('POST', channelId, headers, body))
 }
 

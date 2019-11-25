@@ -46,6 +46,12 @@ class Game {
         this.board.reset();
         this.turn = Config.HUMAN_PLAYER;
         $("#winningAlert").hide();
+        $("#turn").empty()
+        $("#turn").hide()
+        $("#boardGame").show()
+        $("#boardGameTitle").show()
+        $("#boardGameLogo").show()
+        $("#restartGame").show()
         this.board.enableClick();
     }
     
@@ -56,16 +62,19 @@ class Game {
 
         game.turn = game.turn == Config.HUMAN_PLAYER ? Config.AI : Config.HUMAN_PLAYER;
 
-        
+        $("#turn").show()
         if(game.turn == Config.AI){
             twitch.rig.log("This is AI turn");
+            $("#turn").empty()
             game.computerIsThinking = true;
             game.board.disableClick();
             //show the thinking proces
-            $("#waitingAlert").show();
+            $("#waitingAlert").css('display', 'flex');
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
             twitch.rig.log("This is human turn");
+            $("#turn").empty()
+            $("#turn").append("This is human turn")
             game.computerIsThinking = false;
             game.board.enableClick();
             $("#waitingAlert").hide();
@@ -76,20 +85,25 @@ class Game {
         let isDrawn = game.board.isFull();
 
         if(isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
-            $("#winningAlert").show();
+            $("#winningAlert").css('display', 'flex');
             $("#waitingAlert").hide();
-
-            let winnertext = isDrawn ? "Draw! Try again!" : (score > 0 ? "you win!" : "AI win!");
+            $("#boardGame").hide();
+            $("#restartGame").hide()
+            $("#boardGameTitle").hide()
+            $("#boardGameLogo").hide()
+            
+            $("#turn").hide();
+            let winnertext = isDrawn ? "<p>Draw! Try again!</p>" : (score > 0 ? "<p>you win!</p>" : "<p>AI win!</p>");
 
             document.getElementById("winningAlert").innerHTML = winnertext;
 
-            var resetbutton = $('<button id="restartGameAlert" type="button" class="btn btn-outline-primary">Restart</button>')
+            let resetbutton = $('<button id="restartGameAlert" type="button" class="btn btn-primary">Restart</button>')
             $("#winningAlert").append(resetbutton)
 
             $(resetbutton).on('click', function(e) {
                 game.resetGame();
              });
-
+            
             game.board.disableClick();
         }else{
             if(game.turn == Config.AI){

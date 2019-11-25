@@ -121,7 +121,7 @@
     "installationCount": -42,
     "liveConfigUrl": "",
     "name": "Te4ps",
-    "panelHeight": 300,
+    "panelHeight": 497,
     "privacyPolicyUrl": "",
     "requestIdentityLink": false,
     "requiredBroadcasterAbilities": [],
@@ -142,7 +142,7 @@
     "views": {
       "panel": {
         "viewerUrl": "https://localhost:8080/panel.html",
-        "height": 300,
+        "height": 497,
         "canLinkExternalContent": false
       },
       "component": {
