@@ -1,9 +1,20 @@
-body {
-    font-family: monospace;
+#bodyExtension{
+    font-family: monospace,'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow: hidden;
+    background-color: #fff;
+}
+
+#bodyExtensionDark{
+    font-family: monospace,'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    background-color: #201c2b;
 }
 
 #app {
+    overflow: hidden;
+}
+
+#appDark{
     overflow: hidden;
 }
 
@@ -29,12 +40,30 @@ header p{
     display: block;
     position: relative;
 }
+
 #outer-box #winningAlert p{
-    color: #fff;
+    color: #e5e3e8;
     font-size: x-large;
 }
 
+#outer-box #winningAlertDark p{
+    color: #e5e3e8;
+    font-size: x-large;
+}
+
+#boardGameTitle{
+    color:#232127;
+}
+
+#boardGameTitleDark{
+    color:#e5e3e8;
+}
+
 #restartGameAlert{
+    opacity: 1;
+}
+
+#restartGameAlertDark{
     opacity: 1;
 }
 
@@ -45,12 +74,20 @@ header p{
     flex-direction: column;
 }
 
-#appDark{
-    background-color: #0E0E10;
+#outer-box #winningAlert {
+    background: #6441A4;
+    height: 100%;
+    width: 100%;
+    opacity: 0.7;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 0;
+    flex-direction: column;
 }
 
-#outer-box #winningAlert {
-    background: #0277BD;
+#outer-box #winningAlertDark {
+    background: #6441A4;
     height: 100%;
     width: 100%;
     opacity: 0.7;
@@ -65,7 +102,18 @@ header p{
     order: 2;
 }
 
+#restartGameDark{
+    order: 2;
+}
+
 #winningAlert{
+    text-align: center;
+    margin-bottom: 5px; 
+    display: none;
+    position: absolute;
+}
+
+#winningAlertDark{
     text-align: center;
     margin-bottom: 5px; 
     display: none;
@@ -80,11 +128,28 @@ header p{
     justify-content: center;
 }
 
+#waitingAlertDark{
+    margin-bottom: 5px; 
+    display: none;
+    position: relative;
+    align-content: center;
+    justify-content: center;
+    color:#e5e3e8;
+}
+
 #turn{
     display: flex;
     align-content: end;
     justify-content: end;
     font-size: 20px !important;
+}
+
+#turnDark{
+    display: flex;
+    align-content: end;
+    justify-content: end;
+    font-size: 20px !important;
+    color:#e5e3e8;
 }
 
 /**** MOBILE ****/

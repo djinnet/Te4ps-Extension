@@ -1,29 +1,52 @@
+import {CanvasBoard} from "./board.js"
+import {Config} from "./config.js"
+
 // proper initialization
 if('function' === typeof importScripts) {
-   
+   //add scripts to the worker
 	importScripts('config.js');
     importScripts('board.js');
-    //importScripts('public/lib/easeljs/easeljs-NEXT.min.js');
 
+    //add this js an event listener
 	this.addEventListener('message', function(ev) {
 		let params = JSON.parse(ev.data);
 		let Board = new CanvasBoard(params.maxtrix);
 		let newmove = new Minimax().alphabeta(Board, params.depth, {"score": -9999999}, {"score": 9999999}, params.maximizingPlayer);
 		this.postMessage(newmove);
 	}, false);
-
 }
 
+/**
+ * minimax class
+ */
 class Minimax{
 
+    /**
+     * Calculate max value
+     * @param {number} x 
+     * @param {number} y 
+     */
     max(x, y){
         return x.score > y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y))
     }
     
+    /**
+     * Calculate min value
+     * @param {*} x 
+     * @param {*} y 
+     */
     min(x, y){
         return x.score < y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y));
     }
     
+    /**
+     * Calculate minimax and alpha-beta pruning
+     * @param {*} board 
+     * @param {*} depth 
+     * @param {*} a 
+     * @param {*} b 
+     * @param {*} maximizingPlayer 
+     */
     alphabeta(board, depth, a, b, maximizingPlayer) {
         let currentScore = board.getScore();
         let nodes = [];
@@ -86,3 +109,4 @@ class Minimax{
         }
     }
 }
+export {Minimax};

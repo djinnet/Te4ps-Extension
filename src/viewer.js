@@ -1,60 +1,41 @@
-let token = "", tuid ="", channelName =""
-let theme = ""
+import {Game} from "./Connect4/game.js"
+import $ from "jquery"
 
+//this javascript document values
+let token = "", tuid ="", channelName ="", theme = ""
+
+/**
+ * global value for twitch
+ */
 var twitch = window.Twitch ? window.Twitch.ext : null
 
+/**
+ * Get context values from twitch
+ */
 twitch.onContext((context) => {
     theme = context.theme
-    twitch.rig.log(context)
+    SwitchInit(0)
 })
 
+/**
+ * get authorized values from twitch 
+ * and assign them to the values
+ */
 twitch.onAuthorized((auth) => {
     token = auth.token
     tuid = auth.userId
 })
 
+/**
+ * Changed if configuration has changed as event
+ */
 twitch.configuration.onChanged(() => {
-    //Init()
-    /*if(twitch.configuration.broadcaster){
-        let broadcaster = twitch.configuration.broadcaster
-    
-        let content = broadcaster ? broadcaster.content : []
-    
-        if (content === null) {
-            // if the broadcaster is not empty, but do not have content, return []
-            broadcaster.content = '[]'
-            content = broadcaster.content
-        }
-        
-        let value = JSON.parse(broadcaster.content)
-        //SwitchInit(value.mode)
-        
-    }*/
 })
 
-function AuthForMultiPlayer() {
-    let parts = token.split(".")
-    let payload = JSON.parse(window.atob(parts[1]))
-    
-    if (payload.user_id) {
-        $.ajax({
-            url: 'https://api.twitch.tv/kraken/users/' + payload.user_id,
-            method: "get",
-            headers: {
-                "Client-ID": "2wo1au2eakivi3mww1cmjts5eraj2p",
-                "Accept": "application/vnd.twitchtv.v5+json"
-            },
-            success:(data) => {
-                channelName = data.name
-                Init();
-            }
-        })
-    }
-    else {
-        twitch.rig.log("No user id")
-    }
-}
-
+/**
+ * Switch init
+ * @param {number} value the number for call the game
+ */
 function SwitchInit(value) {
     switch (parseInt(value, 10)) {
         case 0:
@@ -62,21 +43,32 @@ function SwitchInit(value) {
             break;
         default:
             twitch.rig.log("We don't know this value: " + value)
-            Init();
             break;
     }
 }
 
-
+/**
+ * add dark tag to the id
+ * @param {*} theme The theme from context
+ * @param {*} id id name
+ */
 function getAppTheme(theme, id) {
     return theme === "dark" ? `${id}Dark` : `${id}`;
 }
 
+/**
+ * Check if the theme is darkmode or lightmode
+ * @param {*} theme The theme from context
+ */
 function IsDarkMode(theme) {
     return theme === "dark" ? true : false;
 }
 
+/**
+ * Call to start the connect 4 game
+ */
 function Init() {
+    //check if theme is darkmode or lightmode
     let appId = getAppTheme(theme, "app")
     let CanvasBoardId = getAppTheme(theme, "CanvasBoard")
     let boardGameId = getAppTheme(theme, "boardGame")
@@ -89,6 +81,7 @@ function Init() {
     let winAlertId = getAppTheme(theme, "winningAlert")
     let waitAlertId = getAppTheme(theme, "waitingAlert")
 
+    //assign all ids in an json object
     let Ids = {
         theme:theme,
         app:appId,
@@ -105,21 +98,47 @@ function Init() {
     }
 
     let isDarkmode = IsDarkMode(theme)
-    twitch.rig.log(Ids.CanvasBoard)
-    twitch.rig.log(Ids.app)
-    twitch.rig.log(isDarkmode)
-    twitch.rig.log(Ids.canvasTitle)
 
+    //if theme is darkmode
     if(isDarkmode){
-        $("#app").prop('id', `${Ids.app}`)
-        $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
-        $(`#${Ids.CanvasBoard}`).empty();
+        //if body is light in darkmode
+        if($("#bodyExtension")[0]){
+            $("#bodyExtension").prop('id', `bodyExtensionDark`)
+        }
+
+        //if app is light in darkmode
+        if($("#app")[0]){
+            $(`#app`).empty();
+            //change app light mode to darkmode
+            $("#app").prop('id', `${Ids.app}`)
+            $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        }else{
+            //if app darkmode exists
+            $(`#${Ids.app}`).empty();
+            $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        }
+        
     }else{
-        $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
-        $(`#${Ids.CanvasBoard}`).empty();       
+        //if body is dark in lightmode
+        if($("#bodyExtensionDark")[0]){
+            $("#bodyExtensionDark").prop('id', `bodyExtension`)
+        }
+
+        //if app dark mode exists
+        if($("#appDark")[0]){
+            $(`#appDark`).empty();
+            //change app Dark mode to lightmode
+            $("#appDark").prop('id', `${Ids.app}`)
+            $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        }else{
+            //if app lightmode exists
+            $(`#${Ids.app}`).empty();
+            $(`#${Ids.app}`).append(`<div id='${Ids.CanvasBoard}'></div>`)
+        }
     }
-    
-    $(`#${Ids.CanvasBoard}`).append(`<h1 id=""${Ids.canvasTitle}"">Connect 4</h1>`)
+
+    //add html tags to canvas board
+    $(`#${Ids.CanvasBoard}`).append(`<h1 id="${Ids.canvasTitle}">Connect 4</h1>`)
     $(`#${Ids.CanvasBoard}`).append(`<p id="${Ids.boardGameCountTurn}"></p>`)
     $(`#${Ids.CanvasBoard}`).append(`<div id="${Ids.canvasturn}"></div>`)
     $(`#${Ids.CanvasBoard}`).append(`<div id="${Ids.alert}"></div>`)
@@ -127,38 +146,31 @@ function Init() {
     $(`#${Ids.CanvasBoard}`).append(`<button id="${Ids.button}" type="button" class="btn btn-primary">Restart</button>`)
     $(`#${Ids.CanvasBoard}`).append(`<img id="${Ids.logo}"/>`)
 
-    
+    //add html tags to alert    
     let outer = $(`<div id="outer-box"></div>`)
     outer.append(`<div id="${Ids.winAlert}"></div>`) 
     outer.append(`<div id="${Ids.waitAlert}" role="alert">&#9881;</div>`)
     $(`#${Ids.alert}`).append(outer)
 
-    
-    let game = new Game(Ids);
+    //Game logic
+    let game = new Game(Ids, 7);
+
+    //reset btn logic
     $(`#${Ids.button}`).on('click', function(e) {
        game.resetGame();
     });
 
-    game.worker = new Worker("js/Connect4/minimax.js");
-    game.board.initBoard(game);
+    //game web worker
+    game.worker = new Worker("./Connect4/minimax.js");
 
-    
+    //init the board
+    game.board.initBoard(game);
 }
 
-function parseJson(input){
+/**
+ * Parse json string into json object based on its input type
+ * @param {text} input the input that can be an json string
+ */
+function parseJsonString(input){
     return typeof (input) === 'string' ? JSON.parse(input) : input
 }
-
-$(function() {
-    // listen for incoming broadcast message from our EBS
-    /*
-    twitch.listen('broadcast', function (target, contentType, message) {
-        this.twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${message}`)
-        let value = parseJson(message)
-        
-        //window.location.reload(false)
-        Init()
-    })
-    */
-   Init()
-})

@@ -6,6 +6,7 @@ twitch.onContext((context) => {
 });
 
 twitch.configuration.onChanged(() => {
+  /*
   let broadcaster = twitch.configuration.broadcaster
 
   if(!broadcaster){
@@ -18,6 +19,7 @@ twitch.configuration.onChanged(() => {
 
   let value = JSON.parse(broadcaster.content)
   setElementValue("selectMode", value.mode)
+  */
 })
 
 function saveMode (selectedIndex) {
@@ -85,5 +87,5 @@ twitch.onAuthorized((auth) => {
 });
 
 function ChangeElementValue(x){
-  saveMode(x.selectedIndex);
+  //saveMode(x.selectedIndex);
 };

@@ -1,11 +1,28 @@
+import {CanvasBoard} from "./board.js"
+import {Config} from "./config.js"
+import $ from "jquery"
+
+/**
+ * Connect 4 game
+ */
 class Game {
-    constructor(ids) {
+    /**
+     * Constructor for the game
+     * @param {jsonObject} ids jsonobject for ids object
+     * @param {number} depth the depth value for minimax
+     */
+    constructor(ids, depth) {
         this.ids = ids;
+        this.depth = depth
         this.turn = Config.HUMAN_PLAYER;
         this.computerIsThinking = false;
         this.board = new CanvasBoard(null, this, ids);
     }
 
+    /**
+     * Place human move
+     * @param {*} evt json object
+     */
     placeHumanMove(evt) {
         let game = this
 
@@ -19,13 +36,17 @@ class Game {
         }
     }
 
+    /**
+     * Place computer move that send json string to the minimax to the worker
+     */
     generateComputerMove() {
-        let game = this
+        let game = this 
         let deferred = jQuery.Deferred();
-        let depth = 5;
+        let depth = game.depth;
 
         let board = new CanvasBoard(game.board.maxtrix, game, this.ids)
         
+        // add listener to the worker
         game.worker.addEventListener('message', function handler(e) {
             let bestmove = e.data;
             game.board.placeMove(game.turn, bestmove.columnMove);
@@ -39,33 +60,43 @@ class Game {
             maximizingPlayer : false
         };
 
+        // send the message to the listener
         game.worker.postMessage(JSON.stringify(workerParams))
+        
+        // return an promise
         return deferred.promise();
     }
 
+    /**
+     * reset the board and game
+     */
     resetGame() {
         this.board.reset();
         this.turn = Config.HUMAN_PLAYER;
-        $(`#${this.ids.alert}`).hide();
+        $(`#${this.ids.winAlert}`).hide();
         $(`#${this.ids.canvasturn}`).empty()
         $(`#${this.ids.canvasturn}`).hide()
         $(`#${this.ids.boardGame}`).show()
         $(`#${this.ids.canvasTitle}`).show()
         $(`#${this.ids.logo}`).show()
-        $(`#${this.ids.buttonId}`).show()
+        $(`#${this.ids.button}`).show()
         this.board.enableClick();
     }
     
+    /**
+     * Switch the turn between AI and the player
+     */
     switchTurn() {
         let game = this
 
+        //refresh the board
         game.board.refresh()
 
         game.turn = game.turn == Config.HUMAN_PLAYER ? Config.AI : Config.HUMAN_PLAYER;
 
         $(`#${this.ids.canvasturn}`).show()
         if(game.turn == Config.AI){
-            twitch.rig.log("This is AI turn");
+            //AI turn
             $(`#${this.ids.canvasturn}`).empty()
             game.computerIsThinking = true;
             game.board.disableClick();
@@ -73,7 +104,6 @@ class Game {
             $(`#${this.ids.waitAlert}`).css('display', 'flex');
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
-            twitch.rig.log("This is human turn");
             $(`#${this.ids.canvasturn}`).empty()
             $(`#${this.ids.canvasturn}`).append("This is human turn")
             game.computerIsThinking = false;
@@ -81,15 +111,15 @@ class Game {
             $(`#${this.ids.waitAlert}`).hide();
         }
 
+        //get the score
         let score = game.board.getScore();
-        twitch.rig.log("switchTurn score: " + score);
         let isDrawn = game.board.isFull();
 
         if(isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
             $(`#${this.ids.winAlert}`).css('display', 'flex');
             $(`#${this.ids.waitAlert}`).hide();
             $(`#${this.ids.boardGame}`).hide();
-            $(`#${this.ids.buttonId}`).hide()
+            $(`#${this.ids.button}`).hide()
             $(`#${this.ids.canvasTitle}`).hide()
             $(`#${this.ids.logo}`).hide()
             
@@ -98,6 +128,7 @@ class Game {
 
             document.getElementById(this.ids.winAlert).innerHTML = winnertext;
 
+            //add reset to the result page
             let resetbutton = $('<button id="restartGameAlert" type="button" class="btn btn-primary">Restart</button>')
             $(`#${this.ids.winAlert}`).append(resetbutton)
 
@@ -107,6 +138,8 @@ class Game {
             
             game.board.disableClick();
         }else{
+            // if the turn is the AI, then do the promise. 
+            // switch turn
             if(game.turn == Config.AI){
                 game.generateComputerMove().done(function() {
                     game.switchTurn();
@@ -115,4 +148,4 @@ class Game {
         }
     }
 }
-
+export{Game};

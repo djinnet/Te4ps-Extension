@@ -1,3 +1,9 @@
+export{Config};
+/**
+ * global configuration. 
+ * Don't edit this unless
+ * you know what you are doing.
+ */
 var Config = {
     HUMAN_PLAYER: 1,
     AI: 2,

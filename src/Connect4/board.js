@@ -1,4 +1,16 @@
+import {createjs} from 'createjs'
+import {Config} from "./config.js"
+
+/**
+ * Canvas class
+ */
 class CanvasBoard {
+    /**
+     * constructor canvas
+     * @param {*} maxtrix 
+     * @param {*} game 
+     * @param {*} ids 
+     */
     constructor(maxtrix, game, ids) {
         this.ids = ids;
         this.currentgame = game;
@@ -14,6 +26,10 @@ class CanvasBoard {
             ];
     }
 
+    /**
+     * initially created an board
+     * @param {*} currentgame 
+     */
     initBoard(currentgame) {
         let board = this;
         board.stage.name = "stage";
@@ -59,6 +75,9 @@ class CanvasBoard {
         board.stage.update();
     }
 
+    /**
+     * reset board
+     */
     reset() {
         let board = this;
         board.maxtrix.forEach(function (row, rowIndex) {
@@ -70,6 +89,9 @@ class CanvasBoard {
         });
     }
 
+    /**
+     * refresh board
+     */
     refresh() {
         let board = this;
         board.maxtrix.forEach(function (row, rowIndex) {
@@ -84,6 +106,12 @@ class CanvasBoard {
         });
     }
 
+    /**
+     * Place move on the board
+     * @param {*} player 
+     * @param {*} columnMove 
+     * @param {*} newBoard 
+     */
     placeMove(player, columnMove, newBoard) {
         let board = newBoard ? new CanvasBoard(this.maxtrix) : this;
         for(let i = Config.ROWS_SIZE-1; i >= 0 ; i--){
@@ -95,14 +123,23 @@ class CanvasBoard {
         return false;
     }
 
+    /**
+     * Allow player to use the board
+     */
     enableClick() {
         this.isClickDisabled = false;
     }
 
+    /**
+     * Don't allow the player to use the board
+     */
     disableClick() {
         this.isClickDisabled = true;
     }
 
+    /**
+     * If the board is full
+     */
     isFull () {
         let board = this;
         for(let column=0; column<Config.COLUMNS_SIZE; column++){
@@ -115,6 +152,11 @@ class CanvasBoard {
         return !atLeastOneEmpty;
     }
 
+    /**
+     * Updated the score
+     * @param {*} humanInRow 
+     * @param {*} ComputerInRow 
+     */
     updateScore(humanInRow, ComputerInRow){
         let points = 0;
         switch (humanInRow) {
@@ -154,6 +196,9 @@ class CanvasBoard {
         return points;
     }
 
+    /**
+     * calculate the score and get result
+     */
     getScore(){
         let board = this;
         let score = 0;
@@ -260,4 +305,4 @@ class CanvasBoard {
     }
 }
 
-
+export {CanvasBoard};
