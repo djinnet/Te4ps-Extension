@@ -1,22 +1,124 @@
-export {CanvasBoard};
-import "../lib/easeljs/easeljs-NEXT.js"
-import {Config} from "./config.js"
+var Config = {
+    HUMAN_PLAYER: 1,
+    AI: 2,
+    ROWS_SIZE: 6,
+    COLUMNS_SIZE: 7,
+    WINNING_SCORE: 1000000
+}
+
+// proper initialization
+if('function' === typeof importScripts){
+    if(typeof window != "object"){
+        self.window = self
+    
+        // add this js an event listener
+        self.addEventListener('message', function(ev) {
+            let params = JSON.parse(ev.data);
+            let Board = new CanvasBoard(params.maxtrix);
+            let newmove = new Minimax().alphabeta(Board, params.depth, {"score": -9999999}, {"score": 9999999}, params.maximizingPlayer);
+            self.postMessage(newmove);
+        }, false);
+    }
+    
+}
+
 
 /**
- * Canvas class
+ * minimax class
  */
-class CanvasBoard {
+class Minimax{
+
     /**
-     * constructor canvas
-     * @param {*} maxtrix 
-     * @param {*} game 
-     * @param {*} ids 
+     * Calculate max value
+     * @param {number} x 
+     * @param {number} y 
      */
-    constructor(maxtrix, game, ids, twitch) {
-        this.twitch = twitch;
-        this.ids = ids;
-        this.currentgame = game;
-        this.stage = (typeof createjs != "undefined") && new createjs.Stage(ids.boardGame);
+    max(x, y){
+        return x.score > y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y))
+    }
+    
+    /**
+     * Calculate min value
+     * @param {*} x 
+     * @param {*} y 
+     */
+    min(x, y){
+        return x.score < y.score ? JSON.parse(JSON.stringify(x)) : JSON.parse(JSON.stringify(y));
+    }
+    
+    /**
+     * Calculate minimax and alpha-beta pruning
+     * @param {*} board 
+     * @param {*} depth 
+     * @param {*} a 
+     * @param {*} b 
+     * @param {*} maximizingPlayer 
+     */
+    alphabeta(board, depth, a, b, maximizingPlayer) {
+        let currentScore = board.getScore();
+        let nodes = [];
+
+        let player = maximizingPlayer ? Config.HUMAN_PLAYER : Config.AI
+
+        for(let column = 0; column < Config.COLUMNS_SIZE; column++){
+            let nextPossibleBoard = board.placeMove(player, column, true);
+            if(nextPossibleBoard) nodes[column] = nextPossibleBoard
+        }
+
+        let isDrawn = nodes.length == 0;
+        
+        if(depth == 0 || isDrawn || currentScore <= -Config.WINNING_SCORE || currentScore >= Config.WINNING_SCORE){
+            let leaf = {
+                "columnMove" : null, 
+                "score" : currentScore
+            }
+            return leaf
+        }
+
+        if(maximizingPlayer){
+            let v = {
+                "columnMove" : null,
+                "score" : -99999
+            }
+
+            for(let i = 0; i <= nodes.length; i++){
+                if(!nodes[i]) continue;
+                let nextmove = this.alphabeta(nodes[i], depth - 1, a, b, false)
+                if(nextmove.score > v.score || v.columnMove == null){
+                    v.columnMove = i;
+                    v.score = nextmove.score;
+                }
+                a = this.max(a, nextmove)
+                if(b.score <= a.score){
+                    break;
+                }
+            }
+            return v;
+        }else{
+            let v = {
+                "columnMove" : null,
+                "score" : 99999
+            }
+            
+            for( let i = 0; i <= nodes.length; i++){
+                if(!nodes[i]) continue;
+                let nextmove = this.alphabeta(nodes[i], depth - 1, a, b, true)
+                if(nextmove.score < v.score || v.columnMove == null){
+                    v.columnMove = i;
+                    v.score = nextmove.score;
+                }
+                b = this.min(b, nextmove)
+                if(b.score <= a.score){
+                    break;
+                }
+            }
+            return v;
+        }
+    }
+}
+
+class CanvasBoard {
+    constructor(maxtrix) {
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
             [
                 [0, 0, 0, 0, 0, 0, 0],
@@ -28,85 +130,8 @@ class CanvasBoard {
             ];
     }
 
-    /**
-     * initially created an board
-     * @param {*} currentgame 
-     */
-    initBoard(currentgame) {
-        let board = this;
-        board.stage.name = new String("stage");
-        board.stage.mouseEventsEnabled = true;
-        board.stage.enableMouseOver();
-
-        if(!currentgame){
-            board.twitch.rig.log("game is null");
-        }
-
-        this.currentgame = currentgame;
-
-        let boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
-        boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(0, 20, 245, 240);
-        boardBackground.graphics.beginFill("#01579B").beginStroke("black").drawRect(0, 250, 245, 10);
     
-    
-        //Draw checkers
-        board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" })
 
-        board.maxtrix.forEach(function (row, rowIndex) {
-            row.forEach(function (column, columnIndex) {
-                let checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 20 + (34 * columnIndex), y: 50 + (35 * rowIndex) })
-                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 13)
-                checkerSpace.cursor = "pointer"
-
-                //test purposes
-                /*checkerSpace.addEventListener("click", function(){
-                    twitch.rig.log("banana");
-                })*/
-
-                checkerSpace.addEventListener("click", (currentgame.placeHumanMove).bind(currentgame) )
-            })
-        })
-
-        board.stage.on('click', function(e) {
-            if(board.isClickDisabled){
-                e.stopPropagation();
-            };
-        }, null, false, {}, true);
-
-        createjs.Ticker.addEventListener("tick", board.stage)
-        board.stage.update();
-    }
-
-    /**
-     * reset board
-     */
-    reset() {
-        let board = this;
-        board.maxtrix.forEach(function (row, rowIndex) {
-            row.forEach(function (column, columnIndex) {
-                let checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-                checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 13);
-                board.maxtrix[rowIndex][columnIndex] = 0;
-            });
-        });
-    }
-
-    /**
-     * refresh board
-     */
-    refresh() {
-        let board = this;
-        board.maxtrix.forEach(function (row, rowIndex) {
-            row.forEach(function (column, columnIndex) {
-                let checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-                if(board.maxtrix[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
-                    checkerSpace.graphics.beginFill("#f70202").beginStroke("grey").drawCircle(0, 0, 13);
-                }else if(board.maxtrix[rowIndex][columnIndex] == Config.AI){
-                    checkerSpace.graphics.beginFill("#ffc107").beginStroke("grey").drawCircle(0, 0, 13);
-                }	
-            });
-        });
-    }
 
     /**
      * Place move on the board
@@ -123,35 +148,6 @@ class CanvasBoard {
             }
         }
         return false;
-    }
-
-    /**
-     * Allow player to use the board
-     */
-    enableClick() {
-        this.isClickDisabled = false;
-    }
-
-    /**
-     * Don't allow the player to use the board
-     */
-    disableClick() {
-        this.isClickDisabled = true;
-    }
-
-    /**
-     * If the board is full
-     */
-    isFull () {
-        let board = this;
-        for(let column=0; column<Config.COLUMNS_SIZE; column++){
-            var atLeastOneEmpty = false;
-            if(board.maxtrix[0][column] == 0){
-                atLeastOneEmpty = true;
-                break;
-            }
-        };
-        return !atLeastOneEmpty;
     }
 
     /**

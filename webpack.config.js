@@ -1,23 +1,26 @@
 module.exports = {
-    entry: ['./src/viewer.js'],
+    entry: {
+      main:'./src/viewer.js',
+      worker:'./src/Worker.js'
+  
+    },
     output:{
-        filename:'main.js',
-        path: __dirname + '/public/js'
+        filename:'[name].js',
+        path: __dirname + '/public/js',
+        globalObject: 'this'
     },
-    resolve: {
-        alias: {
-          createjs: '@createjs/dist/easeljs-NEXT.js'
-        }
+    optimization: {
+      minimize: false
     },
+    /*
     module: {
         rules: [
           {
-            test: /node_modules[/\\]@createjs/,
-            loaders: [
-              'imports-loader?this=>window',
-              'exports-loader?window.createjs'
-            ]
+            test:  /worker\.js$/,
+            use: {
+              loader: 'worker-loader'
+            }
           }
         ]
-    }
+    }*/
 };

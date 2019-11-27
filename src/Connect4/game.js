@@ -11,12 +11,12 @@ class Game {
      * @param {jsonObject} ids jsonobject for ids object
      * @param {number} depth the depth value for minimax
      */
-    constructor(ids, depth) {
+    constructor(ids, depth, twitch) {
         this.ids = ids;
         this.depth = depth
         this.turn = Config.HUMAN_PLAYER;
         this.computerIsThinking = false;
-        this.board = new CanvasBoard(null, this, ids);
+        this.board = new CanvasBoard(null, this, ids, twitch);
     }
 
     /**
@@ -41,7 +41,7 @@ class Game {
      */
     generateComputerMove() {
         let game = this 
-        let deferred = jQuery.Deferred();
+        let deferred = $.Deferred();
         let depth = game.depth;
 
         let board = new CanvasBoard(game.board.maxtrix, game, this.ids)

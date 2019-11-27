@@ -1,4 +1,4 @@
-let token, userId, channelId, clientId;
+/*let token, userId, channelId, clientId;
 
 var twitch = window.Twitch ? window.Twitch.ext : null
 
@@ -19,7 +19,7 @@ twitch.configuration.onChanged(() => {
 
   let value = JSON.parse(broadcaster.content)
   setElementValue("selectMode", value.mode)
-  */
+
 })
 
 function saveMode (selectedIndex) {
@@ -89,3 +89,4 @@ twitch.onAuthorized((auth) => {
 function ChangeElementValue(x){
   //saveMode(x.selectedIndex);
 };
+*/

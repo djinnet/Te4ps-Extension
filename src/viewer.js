@@ -153,7 +153,7 @@ function Init() {
     $(`#${Ids.alert}`).append(outer)
 
     //Game logic
-    let game = new Game(Ids, 7);
+    let game = new Game(Ids, 7, twitch);
 
     //reset btn logic
     $(`#${Ids.button}`).on('click', function(e) {
@@ -161,7 +161,7 @@ function Init() {
     });
 
     //game web worker
-    game.worker = new Worker("./Connect4/minimax.js");
+    game.worker = new Worker("./js/worker.js", {type: "module"});
 
     //init the board
     game.board.initBoard(game);

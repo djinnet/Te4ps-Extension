@@ -1,20 +1,6 @@
-import {CanvasBoard} from "./board.js"
-import {Config} from "./config.js"
-
-// proper initialization
-if('function' === typeof importScripts) {
-   //add scripts to the worker
-	importScripts('config.js');
-    importScripts('board.js');
-
-    //add this js an event listener
-	this.addEventListener('message', function(ev) {
-		let params = JSON.parse(ev.data);
-		let Board = new CanvasBoard(params.maxtrix);
-		let newmove = new Minimax().alphabeta(Board, params.depth, {"score": -9999999}, {"score": 9999999}, params.maximizingPlayer);
-		this.postMessage(newmove);
-	}, false);
-}
+"use strict";
+export {Minimax};
+import {Config} from "./config.js";
 
 /**
  * minimax class
@@ -109,4 +95,3 @@ class Minimax{
         }
     }
 }
-export {Minimax};
