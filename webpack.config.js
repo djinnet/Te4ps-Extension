@@ -1,8 +1,8 @@
 module.exports = {
     entry: {
       main:'./src/viewer.js',
-      worker:'./src/Worker.js'
-  
+      worker:'./src/Worker.js',
+      config:'./src/config.js'
     },
     output:{
         filename:'[name].js',
@@ -11,16 +11,5 @@ module.exports = {
     },
     optimization: {
       minimize: false
-    },
-    /*
-    module: {
-        rules: [
-          {
-            test:  /worker\.js$/,
-            use: {
-              loader: 'worker-loader'
-            }
-          }
-        ]
-    }*/
+    }
 };

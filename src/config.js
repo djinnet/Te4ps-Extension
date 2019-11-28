@@ -1,4 +1,5 @@
-/*let token, userId, channelId, clientId;
+import $ from "jquery"
+let token, userId, channelId, clientId;
 
 var twitch = window.Twitch ? window.Twitch.ext : null
 
@@ -6,7 +7,6 @@ twitch.onContext((context) => {
 });
 
 twitch.configuration.onChanged(() => {
-  /*
   let broadcaster = twitch.configuration.broadcaster
 
   if(!broadcaster){
@@ -18,9 +18,14 @@ twitch.configuration.onChanged(() => {
   }
 
   let value = JSON.parse(broadcaster.content)
-  setElementValue("selectMode", value.mode)
 
+  //set select element with the value 
+  setElementValue("selectMode", value.mode)
 })
+
+function setElementValue(id, valueToSelect) {    
+  document.getElementById(id).value = valueToSelect;
+}
 
 function saveMode (selectedIndex) {
   const jsonArray = {
@@ -75,10 +80,6 @@ function BroadcastTemtemTeam (method, channelId, headers, body) {
   }
 }
 
-function setElementValue(id, valueToSelect) {    
-  document.getElementById(id).value = valueToSelect;
-}
-
 twitch.onAuthorized((auth) => {
   token = auth.token;
   channelId = auth.channelId
@@ -87,6 +88,5 @@ twitch.onAuthorized((auth) => {
 });
 
 function ChangeElementValue(x){
-  //saveMode(x.selectedIndex);
+  saveMode(x.selectedIndex);
 };
-*/

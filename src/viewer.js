@@ -2,7 +2,7 @@ import {Game} from "./Connect4/game.js"
 import $ from "jquery"
 
 //this javascript document values
-let token = "", tuid ="", channelName ="", theme = ""
+let token = "", tuid ="", channelName ="", theme = "", mode = 0
 
 /**
  * global value for twitch
@@ -14,7 +14,8 @@ var twitch = window.Twitch ? window.Twitch.ext : null
  */
 twitch.onContext((context) => {
     theme = context.theme
-    SwitchInit(0)
+    twitch.rig.log(context)
+    SwitchInit(mode)
 })
 
 /**
@@ -30,6 +31,18 @@ twitch.onAuthorized((auth) => {
  * Changed if configuration has changed as event
  */
 twitch.configuration.onChanged(() => {
+    let broadcaster = twitch.configuration.broadcaster
+
+  if(!broadcaster){
+    broadcaster = []
+  }
+
+  if(!broadcaster.content){
+    broadcaster.content = '[]'
+  }
+
+  let value = JSON.parse(broadcaster.content)
+  mode = value.mode
 })
 
 /**
@@ -153,7 +166,7 @@ function Init() {
     $(`#${Ids.alert}`).append(outer)
 
     //Game logic
-    let game = new Game(Ids, 7, twitch);
+    let game = new Game(Ids, 5, twitch);
 
     //reset btn logic
     $(`#${Ids.button}`).on('click', function(e) {
@@ -161,7 +174,7 @@ function Init() {
     });
 
     //game web worker
-    game.worker = new Worker("./js/worker.js", {type: "module"});
+    game.worker = new Worker("./js/worker.js");
 
     //init the board
     game.board.initBoard(game);
@@ -174,3 +187,12 @@ function Init() {
 function parseJsonString(input){
     return typeof (input) === 'string' ? JSON.parse(input) : input
 }
+
+$(function() {
+    // listen for incoming broadcast message from our EBS
+    twitch.listen('broadcast', function (target, contentType, message) {
+        twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${message}`)
+        let value = parseJsonString(message)
+        mode = value.mode
+    })
+})

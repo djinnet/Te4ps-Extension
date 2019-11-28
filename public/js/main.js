@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -27347,7 +27347,8 @@ window.createjs = window.createjs || {};
 
 /***/ }),
 /* 2 */,
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27841,7 +27842,7 @@ class game_Game {
 
 
 //this javascript document values
-let token = "", tuid ="", channelName ="", theme = ""
+let token = "", tuid ="", channelName ="", theme = "", mode = 0
 
 /**
  * global value for twitch
@@ -27853,7 +27854,8 @@ var viewer_twitch = window.Twitch ? window.Twitch.ext : null
  */
 viewer_twitch.onContext((context) => {
     theme = context.theme
-    SwitchInit(0)
+    viewer_twitch.rig.log(context)
+    SwitchInit(mode)
 })
 
 /**
@@ -27869,6 +27871,18 @@ viewer_twitch.onAuthorized((auth) => {
  * Changed if configuration has changed as event
  */
 viewer_twitch.configuration.onChanged(() => {
+    let broadcaster = viewer_twitch.configuration.broadcaster
+
+  if(!broadcaster){
+    broadcaster = []
+  }
+
+  if(!broadcaster.content){
+    broadcaster.content = '[]'
+  }
+
+  let value = JSON.parse(broadcaster.content)
+  mode = value.mode
 })
 
 /**
@@ -27992,7 +28006,7 @@ function Init() {
     jquery_default()(`#${Ids.alert}`).append(outer)
 
     //Game logic
-    let game = new game_Game(Ids, 7, viewer_twitch);
+    let game = new game_Game(Ids, 5, viewer_twitch);
 
     //reset btn logic
     jquery_default()(`#${Ids.button}`).on('click', function(e) {
@@ -28000,7 +28014,7 @@ function Init() {
     });
 
     //game web worker
-    game.worker = new Worker("./js/worker.js", {type: "module"});
+    game.worker = new Worker("./js/worker.js");
 
     //init the board
     game.board.initBoard(game);
@@ -28013,6 +28027,15 @@ function Init() {
 function parseJsonString(input){
     return typeof (input) === 'string' ? JSON.parse(input) : input
 }
+
+jquery_default()(function() {
+    // listen for incoming broadcast message from our EBS
+    viewer_twitch.listen('broadcast', function (target, contentType, message) {
+        viewer_twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${message}`)
+        let value = parseJsonString(message)
+        mode = value.mode
+    })
+})
 
 /***/ })
 /******/ ]);
