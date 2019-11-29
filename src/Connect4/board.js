@@ -44,24 +44,20 @@ class CanvasBoard {
 
         this.currentgame = currentgame;
 
+        //draw boardBackground
         let boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 })
         boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(0, 20, 245, 240);
         boardBackground.graphics.beginFill("#01579B").beginStroke("black").drawRect(0, 250, 245, 10);
     
-    
-        //Draw checkers
+        //Draw board
         board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" })
 
+        //Draw checkers
         board.maxtrix.forEach(function (row, rowIndex) {
             row.forEach(function (column, columnIndex) {
                 let checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 20 + (34 * columnIndex), y: 50 + (35 * rowIndex) })
                 checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 13)
                 checkerSpace.cursor = "pointer"
-
-                //test purposes
-                /*checkerSpace.addEventListener("click", function(){
-                    twitch.rig.log("banana");
-                })*/
 
                 checkerSpace.addEventListener("click", (currentgame.placeHumanMove).bind(currentgame) )
             })

@@ -1,6 +1,9 @@
 import {Game} from "./Connect4/game.js"
 import $ from "jquery"
 
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 //this javascript document values
 let token = "", tuid ="", channelName ="", theme = "", mode = 0
 
@@ -77,6 +80,10 @@ function IsDarkMode(theme) {
     return theme === "dark" ? true : false;
 }
 
+function GetLogo(theme) {
+    return theme === "dark" ? "../img/DarkmodeDuck.png" : "../img/DuckLogo.png";
+}
+
 /**
  * Call to start the connect 4 game
  */
@@ -150,6 +157,8 @@ function Init() {
         }
     }
 
+    let logo = GetLogo(theme)
+
     //add html tags to canvas board
     $(`#${Ids.CanvasBoard}`).append(`<h1 id="${Ids.canvasTitle}">Connect 4</h1>`)
     $(`#${Ids.CanvasBoard}`).append(`<p id="${Ids.boardGameCountTurn}"></p>`)
@@ -157,7 +166,7 @@ function Init() {
     $(`#${Ids.CanvasBoard}`).append(`<div id="${Ids.alert}"></div>`)
     $(`#${Ids.CanvasBoard}`).append(`<canvas id="${Ids.boardGame}" width="300" height="300"></canvas>`)
     $(`#${Ids.CanvasBoard}`).append(`<button id="${Ids.button}" type="button" class="btn btn-primary">Restart</button>`)
-    $(`#${Ids.CanvasBoard}`).append(`<img id="${Ids.logo}"/>`)
+    $(`#${Ids.CanvasBoard}`).append(`<img id="${Ids.logo}" src="${logo}" />`)
 
     //add html tags to alert    
     let outer = $(`<div id="outer-box"></div>`)

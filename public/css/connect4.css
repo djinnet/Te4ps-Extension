@@ -98,6 +98,22 @@ header p{
     flex-direction: column;
 }
 
+#boardGameLogo{
+    height: 51px;
+    width: 51px;
+    padding: -2px;
+    position: absolute;
+    bottom: 10px;
+}
+
+#boardGameLogoDark{
+    height: 51px;
+    width: 51px;
+    padding: -2px;
+    position: absolute;
+    bottom: 10px;
+}
+
 #restartGame{
     order: 2;
 }
