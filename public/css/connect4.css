@@ -61,10 +61,14 @@ header p{
 
 #restartGameAlert{
     opacity: 1;
+    position: relative;
+    top: 250px;
 }
 
 #restartGameAlertDark{
     opacity: 1;
+    position: relative;
+    top: 250px;
 }
 
 #CanvasBoardDark{
@@ -101,17 +105,17 @@ header p{
 #boardGameLogo{
     height: 51px;
     width: 51px;
-    padding: -2px;
     position: absolute;
-    bottom: 10px;
+    bottom: 35px;
+    left: 30px;
 }
 
 #boardGameLogoDark{
     height: 51px;
     width: 51px;
-    padding: -2px;
     position: absolute;
-    bottom: 10px;
+    bottom: 35px;
+    left: 30px;
 }
 
 #restartGame{
@@ -137,19 +141,24 @@ header p{
 }
 
 #waitingAlert{
-    margin-bottom: 5px; 
-    display: none;
-    position: relative;
-    align-content: center;
+    align-content: end;
+    justify-content: end;
+    font-size: 20px !important;
+    height: 0px;
+    position: absolute;
+    top: 50px;
     justify-content: center;
+    display: none;
 }
 
 #waitingAlertDark{
-    margin-bottom: 5px; 
+    align-content: end;
+    justify-content: end;
+    font-size: 20px !important;
+    height: 0px;
+    position: absolute;
+    top: 50px;
     display: none;
-    position: relative;
-    align-content: center;
-    justify-content: center;
     color:#e5e3e8;
 }
 
@@ -158,6 +167,9 @@ header p{
     align-content: end;
     justify-content: end;
     font-size: 20px !important;
+    height: 0px;
+    position: absolute;
+    top: 50px;
 }
 
 #turnDark{
@@ -165,6 +177,9 @@ header p{
     align-content: end;
     justify-content: end;
     font-size: 20px !important;
+    height: 0px;
+    position: absolute;
+    top: 50px;
     color:#e5e3e8;
 }
 
@@ -172,8 +187,12 @@ header p{
 
 @media only screen and (max-width: 768px) {   
     #waitingAlert {
-        margin-bottom: 0px;
+        align-content: end;
+        justify-content: end;
         font-size: 20px !important;
+        height: 0px;
+        position: absolute;
+        top: 50px;
     }
     
     canvas {

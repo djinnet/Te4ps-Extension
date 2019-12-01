@@ -81,7 +81,7 @@ function IsDarkMode(theme) {
 }
 
 function GetLogo(theme) {
-    return theme === "dark" ? "../img/DarkmodeDuck.png" : "../img/DuckLogo.png";
+    return theme === "dark" ? "./img/DarkmodeDuck.png" : "./img/DuckLogo.png";
 }
 
 /**

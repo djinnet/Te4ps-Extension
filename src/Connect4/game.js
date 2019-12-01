@@ -76,7 +76,7 @@ class Game {
         $(`#${this.ids.winAlert}`).hide();
         $(`#${this.ids.canvasturn}`).empty()
         $(`#${this.ids.canvasturn}`).hide()
-        $(`#${this.ids.boardGame}`).show()
+        //$(`#${this.ids.boardGame}`).show()
         $(`#${this.ids.canvasTitle}`).show()
         $(`#${this.ids.logo}`).show()
         $(`#${this.ids.button}`).show()
@@ -105,7 +105,7 @@ class Game {
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
             $(`#${this.ids.canvasturn}`).empty()
-            $(`#${this.ids.canvasturn}`).append("This is human turn")
+            $(`#${this.ids.canvasturn}`).append("<p>This is human turn</p>")
             game.computerIsThinking = false;
             game.board.enableClick();
             $(`#${this.ids.waitAlert}`).hide();
@@ -118,7 +118,7 @@ class Game {
         if(isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
             $(`#${this.ids.winAlert}`).css('display', 'flex');
             $(`#${this.ids.waitAlert}`).hide();
-            $(`#${this.ids.boardGame}`).hide();
+            //$(`#${this.ids.boardGame}`).hide(); //leave it here for future purposes
             $(`#${this.ids.button}`).hide()
             $(`#${this.ids.canvasTitle}`).hide()
             $(`#${this.ids.logo}`).hide()

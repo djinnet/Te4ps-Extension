@@ -35,52 +35,6 @@
       }
     },
     {
-      "id": "2",
-      "label": "VideoComponent",
-      "channelId": "45983494",
-      "configurationAnchor": "panel",
-      "displayChannelName": "djinnet",
-      "type": "component",
-      "features": {
-        "isBitsEnabled": false,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "linked": false,
-      "linkedUserId": "",
-      "mode": "viewer",
-      "isPopout": false,
-      "role": "Logged-Out Viewer",
-      "orientation": "Portrait",
-      "frameSize": {
-        "width": 1280,
-        "height": 720
-      }
-    },
-    {
-      "id": "3",
-      "label": "broadcaster",
-      "channelId": "45983494",
-      "configurationAnchor": "panel",
-      "displayChannelName": "djinnet",
-      "type": "panel",
-      "features": {
-        "isBitsEnabled": false,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "linked": false,
-      "linkedUserId": "",
-      "mode": "viewer",
-      "isPopout": false,
-      "role": "Broadcaster",
-      "orientation": "Portrait",
-      "frameSize": {
-        "width": 1280,
-        "height": 720
-      }
-    },
-    {
       "id": "4",
       "label": "Config",
       "channelId": "45983494",

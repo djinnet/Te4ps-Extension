@@ -35352,7 +35352,7 @@ class game_Game {
         jquery_default()(`#${this.ids.winAlert}`).hide();
         jquery_default()(`#${this.ids.canvasturn}`).empty()
         jquery_default()(`#${this.ids.canvasturn}`).hide()
-        jquery_default()(`#${this.ids.boardGame}`).show()
+        //$(`#${this.ids.boardGame}`).show()
         jquery_default()(`#${this.ids.canvasTitle}`).show()
         jquery_default()(`#${this.ids.logo}`).show()
         jquery_default()(`#${this.ids.button}`).show()
@@ -35381,7 +35381,7 @@ class game_Game {
         }else if(game.turn == Config.HUMAN_PLAYER){
             //human turn
             jquery_default()(`#${this.ids.canvasturn}`).empty()
-            jquery_default()(`#${this.ids.canvasturn}`).append("This is human turn")
+            jquery_default()(`#${this.ids.canvasturn}`).append("<p>This is human turn</p>")
             game.computerIsThinking = false;
             game.board.enableClick();
             jquery_default()(`#${this.ids.waitAlert}`).hide();
@@ -35394,7 +35394,7 @@ class game_Game {
         if(isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
             jquery_default()(`#${this.ids.winAlert}`).css('display', 'flex');
             jquery_default()(`#${this.ids.waitAlert}`).hide();
-            jquery_default()(`#${this.ids.boardGame}`).hide();
+            //$(`#${this.ids.boardGame}`).hide(); //leave it here for future purposes
             jquery_default()(`#${this.ids.button}`).hide()
             jquery_default()(`#${this.ids.canvasTitle}`).hide()
             jquery_default()(`#${this.ids.logo}`).hide()
@@ -35515,7 +35515,7 @@ function IsDarkMode(theme) {
 }
 
 function GetLogo(theme) {
-    return theme === "dark" ? "../img/DarkmodeDuck.png" : "../img/DuckLogo.png";
+    return theme === "dark" ? "./img/DarkmodeDuck.png" : "./img/DuckLogo.png";
 }
 
 /**
