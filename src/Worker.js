@@ -1,3 +1,4 @@
+//global config for worker
 var Config = {
     HUMAN_PLAYER: 1,
     AI: 2,
@@ -24,7 +25,7 @@ if('function' === typeof importScripts){
 
 
 /**
- * minimax class
+ * minimax class for worker
  */
 class Minimax{
 
@@ -117,6 +118,9 @@ class Minimax{
     }
 }
 
+/**
+ * Canvas board for worker
+ */
 class CanvasBoard {
     constructor(maxtrix) {
         this.maxtrix = JSON.parse(JSON.stringify(maxtrix)) ||
@@ -129,9 +133,6 @@ class CanvasBoard {
                 [0, 0, 0, 0, 0, 0, 0]
             ];
     }
-
-    
-
 
     /**
      * Place move on the board
@@ -200,8 +201,6 @@ class CanvasBoard {
     getScore(){
         let board = this;
         let score = 0;
-        //console.log(JSON.stringify(board.maxtrix))
-        //twitch.rig.log(JSON.stringify(board.maxtrix))
         //todo: check this out: https://gist.github.com/Sascha-Gschwind/7cd6decff03a6e41a795d6f6104cb8af
         //refactored this into single loop
         //check rows

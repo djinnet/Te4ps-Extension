@@ -10700,11 +10700,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
-let token, userId, channelId, clientId;
+let token, channelId, clientId, darkOrLightMode;
 
 var twitch = window.Twitch ? window.Twitch.ext : null
 
+/**
+ * Check if the theme is darkmode or lightmode
+ * @param {*} theme The theme from context
+ */
+function IsDarkMode(theme) {
+  return theme === "dark" ? true : false;
+}
+
 twitch.onContext((context) => {
+  darkOrLightMode = context.theme
+
+  twitch.rig.log(context)
+  //if context is dark mode
+  if(IsDarkMode(darkOrLightMode)){
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#Title")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#Title").prop('id', `TitleDark`)
+    }
+
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#Text")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#Text").prop('id', `TextDark`)
+    }
+
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#resultText")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#resultText").prop('id', `resultTextDark`)
+    }
+  }else{
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#TitleDark")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#TitleDark").prop('id', `Title`)
+    }
+
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#TextDark")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#TextDark").prop('id', `Text`)
+    }
+
+    if(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#resultTextDark")[0]){
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#resultTextDark").prop('id', `resultText`)
+    }
+  }
+
 });
 
 twitch.configuration.onChanged(() => {
@@ -10724,10 +10762,27 @@ twitch.configuration.onChanged(() => {
   setElementValue("selectMode", value.mode)
 })
 
+/**
+ * Set value
+ * @param {*} id 
+ * @param {*} valueToSelect 
+ */
 function setElementValue(id, valueToSelect) {    
   document.getElementById(id).value = valueToSelect;
 }
 
+/**
+ * get value
+ * @param {*} id 
+ */
+function getElementValue(id) {    
+  return document.getElementById(id).value;
+}
+
+/**
+ * Save the mode over pubsub extension message
+ * @param {Value} selectedIndex 
+ */
 function saveMode (selectedIndex) {
   const jsonArray = {
     mode: selectedIndex
@@ -10738,12 +10793,17 @@ function saveMode (selectedIndex) {
   // set configuration service with broadcaster and version number and json.
   twitch.configuration.set('broadcaster', '0.0.1', json)
 
-  twitch.rig.log('set broadcaster team: ' + json);
+  //twitch.rig.log('set broadcaster team: ' + json);
 
   // broadcast to the channel with the json data
   sendTeamBroadcast(channelId, json)
 }
 
+/**
+ * Send value to pubsub extension messages
+ * @param {*} channelId 
+ * @param {*} array 
+ */
 function sendTeamBroadcast (channelId, array) {
   // Set the HTTP headers required by the Twitch API.
   const headers = {
@@ -10764,7 +10824,13 @@ function sendTeamBroadcast (channelId, array) {
   jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax(BroadcastTemtemTeam('POST', channelId, headers, body))
 }
 
-// Broadcast the team to the channel by using the twitch api. We are using pubsub.
+/**
+ * Broadcast the team to the channel by using the twitch api. We are using pubsub.
+ * @param {*} method 
+ * @param {*} channelId 
+ * @param {*} headers 
+ * @param {*} body 
+ */
 function BroadcastTemtemTeam (method, channelId, headers, body) {
   return {
     type: method,
@@ -10772,25 +10838,55 @@ function BroadcastTemtemTeam (method, channelId, headers, body) {
     headers: headers,
     url: `https://api.twitch.tv/extensions/message/${channelId}`,
     success: function(data, staus, xhr) {
-      twitch.rig.log("successfully call")
+      //twitch.rig.log("successfully call")
     },
     error: function (xhr, status, err) {
-      twitch.rig.log("Error sending message to channel " + channelId + " : " + err);
+      //twitch.rig.log("Error sending message to channel " + channelId + " : " + err);
       console.log('Raise an issue on our Github, if you can see this message.')
     }
   }
 }
 
+//We are authorized for pubsub
 twitch.onAuthorized((auth) => {
   token = auth.token;
-  channelId = auth.channelId
-  clientId = auth.clientId
-  userId = auth.userId;
+  channelId = auth.channelId;
+  clientId = auth.clientId;
 });
 
-function ChangeElementValue(x){
-  saveMode(x.selectedIndex);
+/**
+ * Allow to change the mode
+ * @param {Value} x 
+ */
+function ChangeMode(x){
+  let result = IsDarkMode(darkOrLightMode) ? `#resultTextDark` : `#resultText`
+  try {
+    twitch.rig.log(result)
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(result).empty()
+    let value = parseInt(x, 10)
+    switch (value) {
+      case 0:
+        saveMode(value);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(result).text("Successful select").css({ 'color': 'green', 'font-size': '150%' });
+        break;
+      default:
+          jquery__WEBPACK_IMPORTED_MODULE_0___default()(result).text("unselected value").css({ 'color': 'red', 'font-size': '150%' });
+        break;
+    }
+    
+  } catch (error) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(result).empty()
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(result).text("Error in select").css({ 'color': 'red', 'font-size': '150%' });
+    console.log(error)
+  }
 };
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(function() {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#SubmitBtn").click(function() {
+    let modevalue = getElementValue("selectMode")
+    ChangeMode(modevalue)
+  })
+})
 
 
 /***/ })

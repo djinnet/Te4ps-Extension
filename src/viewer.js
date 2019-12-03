@@ -2,10 +2,10 @@ import {Game} from "./Connect4/game.js"
 import $ from "jquery"
 
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 //this javascript document values
-let token = "", tuid ="", channelName ="", theme = "", mode = 0
+let theme = "light", mode = 0
 
 /**
  * global value for twitch
@@ -17,7 +17,6 @@ var twitch = window.Twitch ? window.Twitch.ext : null
  */
 twitch.onContext((context) => {
     theme = context.theme
-    twitch.rig.log(context)
     SwitchInit(mode)
 })
 
@@ -26,8 +25,6 @@ twitch.onContext((context) => {
  * and assign them to the values
  */
 twitch.onAuthorized((auth) => {
-    token = auth.token
-    tuid = auth.userId
 })
 
 /**
@@ -198,9 +195,8 @@ function parseJsonString(input){
 }
 
 $(function() {
-    // listen for incoming broadcast message from our EBS
+    // listen for incoming broadcast message
     twitch.listen('broadcast', function (target, contentType, message) {
-        twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${message}`)
         let value = parseJsonString(message)
         mode = value.mode
     })

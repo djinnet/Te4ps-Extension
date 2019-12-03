@@ -2,15 +2,20 @@
 <html>
 <head>
     <title>Config Page</title>
+    <link rel="stylesheet" href="./css/configConnect4.css" />
     <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
     <script src="./js/config.js"></script>
 </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
     <div id="app">
-     <h2>Configure Mode (REQUIRE!)</h2>
-        <select id="selectMode" onchange="ChangeElementValue(this);">
-            <option value="0" selected="selected">Solo mode</option>
-        </select>
+        <h2 id="Title">Configure Mode (REQUIRE!)</h2>
+        <p id="Text">For now you can only select Solo. There will be future updates with more options! Please set solo as value before you finished the configuration.</p>
+            <select id="selectMode">
+                <option>Select mode</option>
+                <option value="0" selected="selected">Solo mode</option>
+            </select>
+        <button id="SubmitBtn" type="button" class="btn btn-primary">Submit mode</button>
+        <p id="resultText"></p>
     </div>
 </body>
 </html>

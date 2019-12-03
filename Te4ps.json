@@ -8,6 +8,12 @@
       "isEphemeral": false,
       "isOrigin": true,
       "value": "wss://pubsub-edge.twitch.tv"
+    },
+    {
+      "isAllowed": true,
+      "isEphemeral": false,
+      "isOrigin": true,
+      "value": "https://client-event-reporter.twitch.tv"
     }
   ],
   "extensionViews": [
@@ -35,8 +41,31 @@
       }
     },
     {
-      "id": "4",
-      "label": "Config",
+      "id": "2",
+      "label": "VideoComponent",
+      "channelId": "45983494",
+      "configurationAnchor": "panel",
+      "displayChannelName": "djinnet",
+      "type": "component",
+      "features": {
+        "isBitsEnabled": false,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "linked": false,
+      "linkedUserId": "",
+      "mode": "viewer",
+      "isPopout": false,
+      "role": "Logged-Out Viewer",
+      "orientation": "Portrait",
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "3",
+      "label": "Config page",
       "channelId": "45983494",
       "configurationAnchor": "component",
       "displayChannelName": "djinnet",
@@ -66,7 +95,7 @@
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
     "configurationLocation": "hosted",
-    "description": "Note: This minigame twitch extension is made under 30 days as part of my exam project. The project is open sourced: [Link to github project]\n\nAllow your viewers to play an connect 4 minigame on your twitch channel.\nThere were initially planned to include multiplayers that the people from your twitch chat can play against each other, however due to limited time to deadline of the exam project, it got pushed to the next major version.\nThis version only allowed you to play against an AI that is made with minimax and alpha-beta pruning. \nPlease provide feedback on the github, so this extension can be improved.",
+    "description": "",
     "eulaTosUrl": "",
     "hasChatSupport": false,
     "iconUrl": "",
@@ -74,7 +103,7 @@
     "id": "dz92s7q4wbxig93fwydvuicc20h4cy",
     "installationCount": -42,
     "liveConfigUrl": "",
-    "name": "Connect 4 - Minigame",
+    "name": "Te4ps",
     "panelHeight": 497,
     "privacyPolicyUrl": "",
     "requestIdentityLink": false,
@@ -83,11 +112,11 @@
     "sku": "",
     "state": "Testing",
     "subscriptionsSupportLevel": "none",
-    "summary": "Add connect 4 minigame extension to your channel. Let your viewers have fun with the minigame while you are taking a break during stream.",
+    "summary": "",
     "supportEmail": "the.gaming.djinn@gmail.com",
     "vendorCode": "",
     "version": "0.0.1",
-    "viewerSummary": "Play connect 4 against an AI. ",
+    "viewerSummary": "",
     "viewerUrl": "https://localhost:8080/panel.html",
     "viewerUrls": {
       "panel": "https://localhost:8080/panel.html",
